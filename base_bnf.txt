@@ -1,5 +1,20 @@
-<program> ::= <function> 
-		| <program> <function> 
+<program> ::= <statment>|<statment_list>
+		;
+<statement_list> ::= <statement>
+		| <statement_list> <statement>
+		;
+<statement> ::= <assignment> SEMICOLON
+		| <declaration> SEMICOLON
+		| <loop>
+		| <condition>
+		| GOTO COLON <flag>
+		| <comment>
+		| <function_call> SEMICOLON
+		| BREAK SEMICOLON
+		| CONTINUE SEMICOLON
+		| RETURN SEMICOLON
+		| RETURN IDNTF SEMICOLON
+		| RETURN <factor> SEMICOLON
 		;
 <function> ::= FUNCTION <return_type> IDNTF LEFT_PARANTHESIS <parameter_list> RIGHT_PARANTHESIS <block>
 		;
@@ -12,20 +27,6 @@
 		;
 <block> ::= LEFT_BRACKET <statement_list> RIGHT_BRACKET
 		| LEFT_BRACKET <empty> RIGHT_BRACKET
-		;
-<statement_list> ::= <statement>
-		| <statement_list> <statement>
-		;
-<statement> ::= <assignment> SEMICOLON
-		| <declaration> SEMICOLON
-		| <loop>
-		| <condition>
-		| <function_call> SEMICOLON
-		| BREAK SEMICOLON
-		| CONTINUE SEMICOLON
-		| RETURN SEMICOLON
-		| RETURN IDNTF SEMICOLON
-		| RETURN <factor> SEMICOLON
 		;
 <declaration> ::= <data_type> IDNTF 
 		| <declaration> <assignment_operator> <RHS>
@@ -60,7 +61,8 @@
 <factor> ::= INT_LTRL
 		| FLT_LTRL 
 		| STR_LTRL
-		| CHR_LTRL	
+		| CHR_LTRL
+		| DOUBLE_LTRL	
 		;
 <assignment_operator> ::= ASSIGNMENT_OPT 
 		| MULTIPLY_ASSIGNMENT_OPT 
@@ -100,8 +102,9 @@ loop
 		;
 <if_statement> ::= IF LEFT_PARANTHESIS <boolean_expression> RIGHT_PARANTHESIS <block>
 		| IF LEFT_PARANTHESIS <function_call> RIGHT_PARANTHESIS <block>
-		| <if_statement> ELSE IF LEFT_PARANTHESIS <boolean_expression> RIGHT_PARANTHESIS <block>
+		| <if_statement> ELIF LEFT_PARANTHESIS <boolean_expression> RIGHT_PARANTHESIS <block>
 		| <if_statement> ELSE <block>
+		| IFNOT LEFT_PARANTHESIS <boolean_expression> RIGHT_PARANTHESIS <block>
 		;
 <boolean_expression> ::= <comparison>
 		| IDNTF
@@ -116,6 +119,7 @@ loop
 <compared> ::= IDNTF
 		| BLN_FALSE 
 		| BLN_TRUE
+		| NOT_OPT IDNTF
 		| <factor>
 		;
 <relational_operators> ::= LESSEQ_OPT
@@ -127,6 +131,9 @@ loop
 		;
 <boolean_operators> ::= AND_OPT 
 		| OR_OPT 
+		| NOT_OPT
+		| XOR_OPT
+		| NOR_OPT
 		;
 <switch_statement> ::= SWITCH LEFT_PARANTHESIS IDNTF RIGHT_PARANTHESIS LEFT_BRACKET <case_statement> RIGHT_BRACKET 
 		| SWITCH LEFT_PARANTHESIS IDNTF LEFT_SQ_BRACKET IDNTF RIGHT_SQ_BRACKET RIGHT_PARANTHESIS LEFT_BRACKET <case_statement> RIGHT_BRACKET 
@@ -141,6 +148,19 @@ loop
 		| INT 
 		| FLOAT 
 		| BOOL
+		| BYTE
+		| STRING
+		| DOUBLE
+		| FILE
+		| DIRECTORY
+		| LONG_INT
+		| SHORT_INT
+		| LONG_FLOAT
+		| SHORT_FLOAT
+		| LONG_DOUBLE
+		| SHORT_DOUBLE
 		;
+<flag> ::= UNDER_SCORE UNDER_SCORE IDNTF UNDER_SCORE UNDER_SCORE
+<comment> ::= BACK_SLASH ASTRIC COMMENT ASTRIC BACK_SLASH
 <empty> ::= /* empty */
 		;
