@@ -63,13 +63,28 @@ return					RETURN
 Built-in Functions
 
 "print"					BLTIN_PRINT
-.
-.
-.
-.
-.
-.
-.
+"listContents"          BLTIN_LIST_CONTENTS 
+"getSize"               BLTIN_GET_SIZE 
+"create"                BLTIN_CREATE 
+"copy"                  BLTIN_COPY 
+"compare"               BLTIN_COMPARE 
+"connectTO"             BLTIN_CONNECT_TO 
+"delete"                BLTIN_DELETE 
+"rename"                BLTIN_RENAME 
+"move"                  BLTIN_MOVE 
+"sort"                  BLTIN_SORT 
+"filtreFiles"           BLTIN_FILTRE_FILES 
+"backup"                BLTIN_BACKUP 
+"synchronize"           BLTIN_SYNCHRONIZE 
+"search"                BLTIN_SEARCH 
+"cd"                    BLTIN_CD 
+"download"              BLTIN_DOWNLOAD 
+"upload"                BLTIN_UPLOAD 
+"open"                  BLTIN_OPEN 
+"properties"            BLTIN_PROPERTIES 
+"moveBack"              BLTIN_MOVE_BACK 
+"moveForward"           BLTIN_MOVE_FORWARD 
+
 
 
 Relational Operators
