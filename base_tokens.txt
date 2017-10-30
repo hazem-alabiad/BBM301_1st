@@ -13,10 +13,10 @@ File						FILE
 Directory					DIRECTORY
 Long_int					LONG_INT
 Short_int					SHORT_INT
-Long_float					LONG_FLOAT
+Long_float					LONG_FLOAT                  //Later disccus
 Short_float					SHORT_FLOAT
 Long_double					LONG_DOUBLE
-Short_double				SHORT_DOUBLE
+Short_double				SHORT_DOUBLE              //Later disccus
 
 
 
