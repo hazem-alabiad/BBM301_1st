@@ -29,9 +29,8 @@ true						BLN_TRUE
 Boolean Operators
 
 "&&"						AND_OPT
-"||"						OR_OPT
-#						XOR_OPT
-$						NOR_OPT
+"||"						OR_OPT 
+"!"					        NOT_OPT              /* Deleted the nor and xor operators becasue they are not boolean operators, but binary operators*/
 
 
 Conditionals
@@ -112,11 +111,11 @@ Unary Operators
 
 "++"						INCREMENT_OPT
 "--"						DECREMENT_OPT
-"!"						NOT_OPT
+"!"						    NOT_OPT                 
 
 
 Binary Operators
- 
+
 "*"						MULTIPLY_OPT
 "/"						DIVIDE_OPT
 "%"						MODE_OPT
