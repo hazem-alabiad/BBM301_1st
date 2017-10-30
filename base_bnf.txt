@@ -1,7 +1,7 @@
-<program> ::= <statment>|<statment_list>
+<program> ::= <statment_list>
 		;
-<statement_list> ::= <statement>
-		| <statement_list> <statement>
+<statement_list> ::= <statement>; <statement_list>
+		| <statement>
 		;
 <statement> ::= <assignment> SEMICOLON
 		| <declaration> SEMICOLON
