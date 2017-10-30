@@ -1,0 +1,132 @@
+Data Types
+
+int						INT
+float						FLOAT
+bool						BOOL
+void						VOID
+char						CHAR
+array						ARRAY
+byte						BYTE
+String					STRING
+Double					DOUBLE
+File						FILE
+Directory					DIRECTORY
+Long_int					LONG_INT
+Short_int					SHORT_INT
+Long_float					LONG_FLOAT
+Short_float					SHORT_FLOAT
+Long_double					LONG_DOUBLE
+Short_double				SHORT_DOUBLE
+
+
+
+Boolean Literals
+
+false						BLN_FALSE
+true						BLN_TRUE
+
+
+Boolean Operators
+
+"&&"						AND_OPT
+"||"						OR_OPT
+#						XOR_OPT
+$						NOR_OPT
+
+
+Conditionals
+
+if						IF
+else						ELSE
+switch					SWITCH
+case						CASE
+default					DEFAULT
+elif						ELIF
+ifnot						IFNOT
+
+
+Loops
+
+while						WHILE
+do						DO
+break						BREAK
+continue					CONTINUE
+for						FOR
+
+
+Function Definition
+
+function					FUNCTION
+return					RETURN
+
+
+Built-in Functions
+
+"print"					BLTIN_PRINT
+.
+.
+.
+.
+.
+.
+.
+
+
+Relational Operators
+
+"<="						LESSEQ_OPT
+">="						GREATEREQ_OPT
+"!="						NEQ_OPT
+"=="						EQ_OPT
+"<"						LESS_OPT
+">"						GREATER_OPT
+
+
+Assignment Operators
+
+"="						ASSIGNMENT_OPT
+"=*"						MULTIPLY_ASSIGNMENT_OPT
+"=/"						DIVIDE_ASSIGNMENT_OPT
+"=%"						MODE_ASSIGNMENT_OPT
+"=+"						ADD_ASSIGNMENT_OPT
+"=-"						SUB_ASSIGNMENT_OPT
+"=^"						POW_ASSIGNMENT_OPT
+
+
+Unary Operators
+
+"++"						INCREMENT_OPT
+"--"						DECREMENT_OPT
+"!"						NOT_OPT
+
+
+Binary Operators
+ 
+"*"						MULTIPLY_OPT
+"/"						DIVIDE_OPT
+"%"						MODE_OPT
+"+"						ADD_OPT
+"-"						SUB_OPT
+"^"						POW_OPT
+
+
+Literals and Identifiers
+ 
+[\-+]?{Digit}+				INT_LTRL
+[\-+]?{Digit}*"."{Digit}+		FLT_LTRL
+\"(\\.|[^\\"])*\"				STR_LTRL
+\'(\\.|[^\\'])+\'				CHR_LTRL
+{Letter}({Digit}|{Letter})*		IDNTF
+
+";"						SEMICOLON
+"{"						LEFT_BRACKET
+"}"						RIGHT_BRACKET
+","						COMMA
+":"						COLON
+"("						LEFT_PARANTHESIS
+")"						RIGHT_PARANTHESIS
+"["						LEFT_SQ_BRACKET
+"]"						RIGHT_SQ_BRACKET
+(\r|\n|\r\n)				NEW_LINE
+[ \t\v\f]+					WHITE_SPACE
+.						UNKNOWN_CHAR
