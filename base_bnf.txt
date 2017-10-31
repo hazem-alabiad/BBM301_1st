@@ -7,7 +7,7 @@
 		| <declaration> SEMICOLON
 		| <loop>
 		| <condition>
-		| GOTO COLON <flag>
+		| GOTO COLON <flag> SEMICOLON
 		| <comment>
 		| <function_call> SEMICOLON
 		| BREAK SEMICOLON
@@ -152,7 +152,6 @@ loop
 		;
 <boolean_operators> ::= AND_OPT 
 		| OR_OPT 
-		| NOT_OPT
 		| XOR_OPT
 		| NOR_OPT
 		;

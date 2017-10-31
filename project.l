@@ -54,25 +54,25 @@ byte	{
 String  {
             return (STRING):
 }
-Double  {
+double  {
             return (DOUBLE);
 }					
-File	{
+file	{
             return (FILE);
 }					
-Directory {
+directory {
             return (DIRECTORY);
 }					
-Long_int  {
-            return (DIRECTORY);
+long_int  {
+            return (LONG_INT);
 }			
-Short_int {
+short_int {
             return (SHORT_INT);
 }					
-Short_float {
+short_float {
             return (SHORT_FLOAT);
 }					
-Long_double	{
+long_double	{
             return (LONG_DOUBLE);
 }
  /* Boolean Literals */
@@ -90,10 +90,12 @@ true        {
 \|\|        {
             return (OR_OPT);
 }						
-\!          {
-            return (NOT_OPT);
-}			
-
+\#	{
+		return (XOR_OPT);
+}
+\$	{
+		return (NOR_OPT);
+}
 
 
 %%
