@@ -28,7 +28,9 @@ Boolean Operators
 
 "&&"						AND_OPT
 "||"						OR_OPT 
-"!"					        NOT_OPT              /* Deleted the nor and xor operators becasue they are not boolean operators, but binary operators*/
+"!"					        NOT_OPT
+
+/* Deleted the nor and xor operators becasue they are not boolean operators, but binary operators*/
 
 
 Conditionals
@@ -59,7 +61,7 @@ return					RETURN
 
 Built-in Functions
 
-"print"					BLTIN_PRINT
+"print"				    BLTIN_PRINT
 "listContents"          BLTIN_LIST_CONTENTS 
 "getSize"               BLTIN_GET_SIZE 
 "create"                BLTIN_CREATE 
@@ -109,7 +111,8 @@ Unary Operators
 
 "++"						INCREMENT_OPT
 "--"						DECREMENT_OPT
-"!"						    NOT_OPT                 
+"!"						    NOT_OPT
+
 
 
 Binary Operators
@@ -124,7 +127,7 @@ Binary Operators
 
 Literals and Identifiers
  
-[\-+]?{Digit}+				INT_LTRL
+[\-+]?{Digit}+					INT_LTRL
 [\-+]?{Digit}*"."{Digit}+		FLT_LTRL
 \"(\\.|[^\\"])*\"				STR_LTRL
 \'(\\.|[^\\'])+\'				CHR_LTRL
