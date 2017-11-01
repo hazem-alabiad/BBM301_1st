@@ -22,10 +22,24 @@
 %token BLTIN_DOWNLOAD BLTIN_UPLOAD BLTIN_OPEN BLTIN_PROPERTIES BLTIN_MOVE_BACK BLTIN_MOVE_FORWARD
 %token LESSEQ_OPT GREATEREQ_OPT NEQ_OPT EQ_OPT LESS_OPT GREATER_OPT ASSIGNMENT_OPT
 %token MULTIPLY_ASSIGNMENT_OPT DIVIDE_ASSIGNMENT_OPT MODE_ASSIGNMENT_OPT ADD_ASSIGNMENT_OPT
-%token SUB_ASSIGNMENT_OPT POW_ASSIGNMENT_OPT INCREMENT_OPT DECREMENT_OPT MULTIPLY_OPT
-%token DIVIDE_OPT MODE_OPT ADD_OPT SUB_OPT POW_OPT INT_LTRL FLT_LTRL DOUBLE_LTRL STR_LTRL CHR_LTRL IDNTF
+%token SUB_ASSIGNMENT_OPT POW_ASSIGNMENT_OPT INCREMENT_OPT DECREMENT_OPT
+%token DIVIDE_OPT MODE_OPT ADD_OPT SUB_OPT POW_OPT MULTIPLY_OPT
+%token INT_LTRL FLT_LTRL DOUBLE_LTRL STR_LTRL CHR_LTRL IDNTF
+%token BITWISE_XOR BITWISE_NOR BITWISE_NOT BITWISE_OR BITWISE_AND BITWISE_LEFTSHIFT BITWISE_RIGHTSHIFT 
 %token SEMICOLON LEFT_BRACKET RIGHT_BRACKET COMMA COLON LEFT_PARANTHESIS RIGHT_PARANTHESIS
 %token LEFT_SQ_BRACKET RIGHT_SQ_BRACKET NEW_LINE WHITE_SPACE UNKNOWN_CHAR
+
+/* Binary operators's precedence */
+%left  BITWISE_NOR
+%left  BITWISE_OR
+%left  BITWISE_XOR
+%left  BITWISE_AND
+%left  BITWISE_LEFTSHIFT BITWISE_RIGHTSHIFT
+%left  ADD_OPT SUB_OPT
+%left  DIVIDE_OPT MODE_OPT MULTIPLY_OPT 
+%right POW_OPT
+%right BITWISE_NOT
+
 
 %%
 program : statment_list ;
@@ -106,17 +120,21 @@ identifier_list : empty
 				| identifier_list COMMA factor
 				;
 
-arithmetic_expression 	: term
-						| arithmetic_expression ADD_OPT term
-						| arithmetic_expression SUB_OPT term
+arithmetic_expression 	: factor
+						| arithmetic_expression ADD_OPT factor
+						| arithmetic_expression SUB_OPT factor
+						| arithmetic_expression MULTIPLY_OPT factor
+						| arithmetic_expression DIVIDE_OPT factor
+						| arithmetic_expression POW_OPT factor
+						| arithmetic_expression MODE_OPT factor
+						| arithmetic_expression BITWISE_LEFTSHIFT factor
+						| arithmetic_expression BITWISE_RIGHTSHIFT factor
+						| arithmetic_expression BITWISE_AND factor
+						| arithmetic_expression BITWISE_OR factor
+						| arithmetic_expression BITWISE_XOR factor
+						| arithmetic_expression BITWISE_NOR factor
+						| BITWISE_NOT arithmetic_expression  
 						;
-
-term 	: factor
-		| term MULTIPLY_OPT factor
-		| term DIVIDE_OPT factor
-		| term POW_OPT factor
-		| term MODE_OPT factor
-		;
 
 factor 	: INT_LTRL
 		| FLT_LTRL 
@@ -207,8 +225,7 @@ relational_operators 	: LESSEQ_OPT
 
 boolean_operators 	: AND_OPT 
 					| OR_OPT 
-					| XOR_OPT
-					| NOR_OPT
+					| NOT_OPT
 					;
 
 switch_statement : SWITCH LEFT_PARANTHESIS IDNTF RIGHT_PARANTHESIS LEFT_BRACKET case_statement 							RIGHT_BRACKET 

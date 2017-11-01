@@ -257,6 +257,27 @@ moveForward           {
 \^						{
               return (POW_OPT);
 }
+\$           {
+              return (BITWISE_XOR);
+}
+\#           {
+             return (BITWISE_NOR);
+}
+\~           {
+             return (BITWISE_NOT);
+}
+\|           {
+             return (BITWISE_OR);
+}
+\&          {
+             return (BITWISE_AND);
+}
+\<\<        {
+             retrun (BITWISE_LEFTSHIFT);
+} 
+\>\>        {
+            return(BITWISE_RIGHTSHIFT);
+}
  /* Literals and Identifiers */
 ({IDNTF}) {
             return (IDNTF);

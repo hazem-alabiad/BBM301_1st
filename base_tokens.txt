@@ -117,12 +117,19 @@ Unary Operators
 
 Binary Operators
 
+"~"                     BITWISE_NOT
 "*"						MULTIPLY_OPT
 "/"						DIVIDE_OPT
 "%"						MODE_OPT
 "+"						ADD_OPT
 "-"						SUB_OPT
 "^"						POW_OPT
+"<<"                    BITWISE_LEFTSHIFT
+">>"                    BITWISE_RIGHTSHIFT
+"&"                     BITWISE_AND
+"$"                     BITWISE_XOR
+"|"                     BITWISE_OR
+"#"                     BITWISE_NOR
 
 
 Literals and Identifiers
