@@ -7,9 +7,8 @@
 	float			float_val;
 	int				int_val; //C has not bool type
 	char			char_val;
-	char			byte_val; // C has no byte type
+	char			byte_val;// C has no byte type
 	double			double_val;
-	char[30] 		string_val;
 }
 
 %start program
