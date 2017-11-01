@@ -27,7 +27,6 @@
 %token SEMICOLON LEFT_BRACKET RIGHT_BRACKET COMMA COLON LEFT_PARANTHESIS RIGHT_PARANTHESIS
 %token LEFT_SQ_BRACKET RIGHT_SQ_BRACKET NEW_LINE WHITE_SPACE UNKNOWN_CHAR
 
-
 %%
 program : statment_list ;
 statement_list : statement | statement_list statement ;
