@@ -18,7 +18,6 @@ WHITE_SPACE [ \t\v\f]+
 int		  {
             return (INT);
     }
-
 float    {
             return (FLOAT);
 }						
@@ -44,7 +43,7 @@ double  {
             return (DOUBLE);
 }					
 file	{
-            return (FILE);
+            return (FE);
 }					
 directory {
             return (DIRECTORY);
@@ -92,7 +91,7 @@ case			 {
            return (CASE);
 }
 default	    {
-           reuturn (DEFAULT);
+           return (DEFAULT);
 }
 elif        {
           return (ELIF);
@@ -182,7 +181,7 @@ open                  {
                       return (BLTIN_OPEN); 
 }
 properties            {
-                      retrun (BLTIN_PROPERTIES); 
+                      return (BLTIN_PROPERTIES); 
 }
 moveBack              {
                       return (BLTIN_MOVE_BACK); 
@@ -273,7 +272,7 @@ moveForward           {
              return (BITWISE_AND);
 }
 \<\<        {
-             retrun (BITWISE_LEFTSHIFT);
+             return (BITWISE_LEFTSHIFT);
 } 
 \>\>        {
             return(BITWISE_RIGHTSHIFT);
@@ -294,6 +293,5 @@ moveForward           {
 ({CHR_LTRL}) {
             return (CHR_LTRL);
           }
-
 %%
 int yywrap (void) {return 1;}

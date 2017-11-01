@@ -9,12 +9,12 @@ array						ARRAY
 byte						BYTE
 String					STRING
 Double					DOUBLE
-File						FILE
-Directory					DIRECTORY
-Long_int					LONG_INT
-Short_int					SHORT_INT
-Long_float					LONG_FLOAT                  //Later disccus
-Long_double					LONG_DOUBLE
+file						FE
+directory					DIRECTORY
+long_int					LONG_INT
+short_int					SHORT_INT
+long_float					LONG_FLOAT                  //Later disccus
+long_double					LONG_DOUBLE
 
 
 
