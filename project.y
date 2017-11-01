@@ -5,10 +5,11 @@
 
 %union{  // Later to be diccussed
 	float			float_val;
-	int			bool_val;//C has not bool type
+	int				int_val; //C has not bool type
 	char			char_val;
-	char			byte_val;// C has no byte type
+	char			byte_val; // C has no byte type
 	double			double_val;
+	char[30] 		string_val;
 }
 
 %start program
@@ -266,7 +267,8 @@ empty : /* empty */
 	  ;
 %%
 int main (void){
-return yyparse();
+	yyparse();
+	return 0;
 }
 
 void yyerror (char *s) {fprintf (stderr, "%s\n", s);}
