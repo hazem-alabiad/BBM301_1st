@@ -247,3 +247,9 @@ comment : BACK_SLASH ASTRIC COMMENT ASTRIC BACK_SLASH
 
 empty : /* empty */
 	  ;
+%%
+int main (void){
+return yyparse();
+}
+
+void yyerror (char *s) {fprintf (stderr, "%s\n", s);}

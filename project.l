@@ -1,5 +1,8 @@
 /* Project.l */
 /* FOR LATTER DISCUSS             Long_float Short_double bitwise operators*/
+%{
+#include "y.tab.h"
+%}
 Digit [0-9]
 Letter [a-zA-Z]
 INT_LTRL [\-+]?{Digit}+ 				
@@ -272,3 +275,4 @@ moveForward           {
           }
 
 %%
+int yywrap (void) {return 1;}
