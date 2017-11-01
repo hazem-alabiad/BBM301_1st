@@ -277,12 +277,13 @@ union YYSTYPE
 #line 6 "project.y" /* yacc.c:1909  */
   // Later to be diccussed
 	float			float_val;
-	int			bool_val;//C has not bool type
+	int				int_val; //C has not bool type
 	char			char_val;
-	char			byte_val;// C has no byte type
+	char			byte_val; // C has no byte type
 	double			double_val;
+	char[30] 		string_val;
 
-#line 286 "y.tab.h" /* yacc.c:1909  */
+#line 287 "y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
