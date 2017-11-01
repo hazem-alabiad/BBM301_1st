@@ -1,5 +1,5 @@
 /* Project.l */
-/* FOR LATTER DISCUSS             Long_float Short_double */
+/* FOR LATTER DISCUSS             Long_float Short_double bitwise operators*/
 Digit [0-9]
 Letter [a-zA-Z]
 INT_LTRL [\-+]?{Digit}+ 				
@@ -10,24 +10,7 @@ IDNTF {Letter}({Digit}|{Letter})*
 NEW_LINE (\r|\n|\r\n)				
 WHITE_SPACE [ \t\v\f]+					
 %%
- /* Literals and Identifiers */
 ({WHITE_SPACE}) ;
-({IDNTF}) {
-            return (IDNTF);
-          }
-({INT_LTRL}) {
-            return (INT_LTRL);
-          } 
-({FLT_LTRL}) {
-            return (FLT_LTRL);
-          }
-({STR_LTRL}) {
-            return (STR_LTRL);
-          }
-({CHR_LTRL}) {
-            return (CHR_LTRL);
-          }
-
  /* Data Types */
 int		  {
             return (INT);
@@ -82,7 +65,6 @@ false       {
 true        {
             return (BLN_TRUE);
 }      		
-
  /* Boolean Operators */
 \&\&	    {
             return (AND_OPT);
@@ -90,12 +72,203 @@ true        {
 \|\|        {
             return (OR_OPT);
 }						
-\#	{
-		return (XOR_OPT);
+\!          {
+            return (NOT_OPT)
 }
-\$	{
-		return (NOR_OPT);
+ /* Conditionals */
+if				 {
+            return (IF);
 }
-
+else			 {
+            return (ELSE);
+}
+switch		 {
+           return (SWITCH);
+}
+case			 {
+           return (CASE);
+}
+default	    {
+           reuturn (DEFAULT);
+}
+elif        {
+          return (ELIF);
+}
+ifnot			  {
+          return (IFNOT);
+}
+ /* Loops */
+while					{
+             return (WHILE);
+}	
+do						{
+             return (DO)
+}
+break					{
+             return (BREAK);
+}
+continue		 {
+             return (CONTINUE);
+}
+for						{
+             return (FOR);
+}
+ /* Function Definition */
+function		 {
+            return (FUNCTION);
+}
+return			 {
+            return (RETURN);
+}
+ /* Built-in Functions */
+print				         {
+                     return (BLTIN_PRINT);
+}
+listContents         {
+                     return (BLTIN_LIST_CONTENTS)
+}                     
+getSize              {
+                     return (BLTIN_GET_SIZE)
+} 
+create               {
+                     return (BLTIN_CREATE); 
+}
+copy                 {
+                     return (BLTIN_COPY);
+}
+compare              {
+                     return (BLTIN_COMPARE); 
+}
+connectTO            {
+                     return (BLTIN_CONNECT_TO);
+}
+delete                {
+                     return (BLTIN_DELETE); 
+}
+rename               {
+                     return (BLTIN_RENAME);
+}
+move                 {
+                     return (BLTIN_MOVE); 
+}
+sort                 {
+                     return (BLTIN_SORT); 
+}
+filtreFiles          {
+                     return (BLTIN_FILTRE_FILES); 
+}
+backup               {
+                    return (BLTIN_BACKUP); 
+}
+synchronize          { 
+                    return  (BLTIN_SYNCHRONIZE);
+}   
+search               {
+                     return (BLTIN_SEARCH);
+}  
+cd                    {
+                     return (BLTIN_CD); 
+}
+download              {
+                     return (BLTIN_DOWNLOAD); 
+}
+upload                {
+                      return (BLTIN_UPLOAD); 
+}
+open                  {
+                      return (BLTIN_OPEN); 
+}
+properties            {
+                      retrun (BLTIN_PROPERTIES); 
+}
+moveBack              {
+                      return (BLTIN_MOVE_BACK); 
+}
+moveForward           {
+                      return (BLTIN_MOVE_FORWARD);
+} 
+ /* Relational Operators */
+\<\=						{
+                return (LESSEQ_OPT);
+}
+\>\=						{
+                return (GREATEREQ_OPT);
+}
+\!\=						{
+                return (NEQ_OPT);
+}
+\=\=						{
+                return (EQ_OPT);
+                }
+\<						  {
+                return (LESS_OPT);
+}
+\>						  {
+                return (GREATER_OPT);
+}
+ /* Assignment Operators */
+\=					   {
+               return (ASSIGNMENT_OPT);
+}
+\=\*					 {
+               return (MULTIPLY_ASSIGNMENT_OPT);
+}
+\=\/					 {
+               return (DIVIDE_ASSIGNMENT_OPT);
+}
+\=\%					 {
+              return (MODE_ASSIGNMENT_OPT);
+}
+\=\+					{
+              return (ADD_ASSIGNMENT_OPT);
+}
+\=\-					{
+              return (SUB_ASSIGNMENT_OPT);
+}
+\=\^					{
+              return (POW_ASSIGNMENT_OPT);
+}
+ /* Unary Operators */
+\+\+						{
+              return (INCREMENT_OPT);
+}
+\-\-					 {
+               return (DECREMENT_OPT);
+}
+ /* Binary Operators */
+\*						{
+              return (MULTIPLY_OPT);
+}
+\/						{
+              return (DIVIDE_OPT);
+}
+\%						{
+              return (MODE_OPT);
+}
+\+						{
+              return (ADD_OPT);
+}
+\-						{
+              return (SUB_OPT);
+}
+\^						{
+              return (POW_OPT);
+}
+ /* Literals and Identifiers */
+({IDNTF}) {
+            return (IDNTF);
+          }
+({INT_LTRL}) {
+            return (INT_LTRL);
+          } 
+({FLT_LTRL}) {
+            return (FLT_LTRL);
+          }
+({STR_LTRL}) {
+            return (STR_LTRL);
+          }
+({CHR_LTRL}) {
+            return (CHR_LTRL);
+          }
 
 %%
