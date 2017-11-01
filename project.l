@@ -38,7 +38,7 @@ byte	{
             return (BYTE);
 }					
 String  {
-            return (STRING):
+            return (STRING);
 }
 double  {
             return (DOUBLE);
@@ -76,7 +76,7 @@ true        {
             return (OR_OPT);
 }						
 \!          {
-            return (NOT_OPT)
+            return (NOT_OPT);
 }
  /* Conditionals */
 if				 {
@@ -105,7 +105,7 @@ while					{
              return (WHILE);
 }	
 do						{
-             return (DO)
+             return (DO);
 }
 break					{
              return (BREAK);
@@ -128,10 +128,10 @@ print				         {
                      return (BLTIN_PRINT);
 }
 listContents         {
-                     return (BLTIN_LIST_CONTENTS)
+                     return (BLTIN_LIST_CONTENTS);
 }                     
 getSize              {
-                     return (BLTIN_GET_SIZE)
+                     return (BLTIN_GET_SIZE);
 } 
 create               {
                      return (BLTIN_CREATE); 
