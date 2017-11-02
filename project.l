@@ -1,5 +1,5 @@
 /* Project.l */
-/* FOR LATTER DISCUSS             Long_float Short_double bitwise operators*/
+/* FOR LATTER DISCUSS             Long_float Short_double*/
 %{
 #include "y.tab.h"
 %}
@@ -14,6 +14,7 @@ NEW_LINE (\r|\n|\r\n)
 WHITE_SPACE [ \t\v\f]+					
 %%
 ({WHITE_SPACE}) ;
+({NEW_LINE}) ;
  /* Data Types */
 int		  {
             return (INT);
@@ -278,6 +279,33 @@ moveForward           {
             return(BITWISE_RIGHTSHIFT);
 }
  /* Literals and Identifiers */
+\;					{
+            return (SEMICOLON);
+}
+\{					{
+            return (LEFT_BRACKET);
+}
+\}					{
+            return (RIGHT_BRACKET);
+}
+\,					{
+            return (COMMA);
+}
+\:					{
+            return (COLON);
+}
+\(					{
+            return (LEFT_PARANTHESIS);
+}
+\)					{
+            return (RIGHT_PARANTHESIS);
+}
+\[					{
+            return (LEFT_SQ_BRACKET);
+}
+\]					{
+            return (RIGHT_SQ_BRACKET);
+}
 ({IDNTF}) {
             return (IDNTF);
           }
@@ -293,5 +321,9 @@ moveForward           {
 ({CHR_LTRL}) {
             return (CHR_LTRL);
           }
+ /* UNKNOWN_CHAR */
+.					{
+          return (UNKNOWN_CHAR);
+}
 %%
 int yywrap (void) {return 1;}
