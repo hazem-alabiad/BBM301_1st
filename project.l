@@ -118,9 +118,6 @@ for						{
              return (FOR);
 }
  /* Function Definition */
-function		 {
-            return (FUNCTION);
-}
 return			 {
             return (RETURN);
 }
