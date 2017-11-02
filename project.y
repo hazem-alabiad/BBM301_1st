@@ -6,10 +6,11 @@
 
 %union{  // Later to be diccussed
 	float			float_val;
-	int				int_val; //C has not bool type
+	int			int_val;
 	char			char_val;
 	char			byte_val;// C has no byte type
 	double			double_val;
+	int 			bool_val;// C has no bool type
 }
 
 %start program
@@ -51,7 +52,7 @@ statement : assignment SEMICOLON
 		  | loop
 		  | condition
 		  | GOTO COLON flag SEMICOLON
-		  | comment
+		  | COMMENT
 		  | function_call SEMICOLON
 		  | BREAK SEMICOLON
 		  | CONTINUE SEMICOLON
@@ -260,8 +261,6 @@ data_type 	: CHAR
 flag : 	UNDER_SCORE UNDER_SCORE IDNTF UNDER_SCORE UNDER_SCORE
 	 ;
 
-comment : BACK_SLASH ASTRIC COMMENT ASTRIC BACK_SLASH
-		;
 
 empty : /* empty */
 	  ;

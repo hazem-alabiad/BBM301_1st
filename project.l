@@ -11,7 +11,8 @@ STR_LTRL \"(\\.|[^\\"])*\"
 CHR_LTRL \'(\\.|[^\\'])+\'				
 IDNTF {Letter}({Digit}|{Letter})*	
 NEW_LINE (\r|\n|\r\n)				
-WHITE_SPACE [ \t\v\f]+					
+WHITE_SPACE [ \t\v\f]+
+COMM \/\*.*?\*\/
 %%
 ({WHITE_SPACE}) ;
 ({NEW_LINE}) ;
@@ -189,7 +190,10 @@ moveBack              {
 }
 moveForward           {
                       return (BLTIN_MOVE_FORWARD);
-} 
+}
+goto		     {
+			return (GOTO);
+}
  /* Relational Operators */
 \<\=						{
                 return (LESSEQ_OPT);
@@ -306,6 +310,9 @@ moveForward           {
 \]					{
             return (RIGHT_SQ_BRACKET);
 }
+\_					{
+	    return (UNDER_SCORE);
+}
 ({IDNTF}) {
             return (IDNTF);
           }
@@ -321,6 +328,9 @@ moveForward           {
 ({CHR_LTRL}) {
             return (CHR_LTRL);
           }
+({COMM}) {
+	return (COMMENT);
+}
  /* UNKNOWN_CHAR */
 .					{
           return (UNKNOWN_CHAR);
