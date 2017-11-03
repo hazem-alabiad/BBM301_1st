@@ -167,12 +167,9 @@ do_statement : DO block
 for_loop : FOR LEFT_PARANTHESIS for_statement RIGHT_PARANTHESIS block
 		 ;
 
-for_statement : initialize SEMICOLON boolean_expression SEMICOLON assignment
+for_statement : declaration assignment_operator RHS SEMICOLON boolean_expression SEMICOLON assignment // REMOVED INITILIZE, FOR ONLY WORKS WITH __ for(int x=1;....)__
 			  ;
 
-initialize 	: declaration
-			| assignment
-			;
 
 condition 	: if_statement
 			| switch_statement
@@ -192,16 +189,17 @@ boolean_expression 	: comparison
 					| NOT_OPT IDNTF
 					;
 
-comparison 	: boolean_expression relational_operators compared
-			| boolean_expression boolean_operators compared
-			| function_call relational_operators compared
+comparison 	: 	boolean_expression boolean_operators compared // boolean operators only for boolean values (false and true, .....)
+			| factor relational_operators factor		// relational operators only for factor values ( 1>2, 2==2, .....)
+			| IDNTF relational_operators factor
+			| factor relational_operators IDNTF
+			| IDNTF relational_operators IDNTF
 			;
 
 compared	: IDNTF
 			| BLN_FALSE 
 			| BLN_TRUE
 			| NOT_OPT IDNTF
-			| factor
 			;
 
 relational_operators 	: LESSEQ_OPT
@@ -213,8 +211,8 @@ relational_operators 	: LESSEQ_OPT
 						;
 
 boolean_operators 	: AND_OPT 
-					| OR_OPT 
-					| NOT_OPT
+					| OR_OPT
+					// DELETD THE NOT OPERATOR BECAUSE IT IS NOT AN OPERATOR (false ! true)
 					;
 
 switch_statement : SWITCH LEFT_PARANTHESIS IDNTF RIGHT_PARANTHESIS LEFT_BRACKET case_statement 							RIGHT_BRACKET 
