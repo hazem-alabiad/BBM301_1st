@@ -167,7 +167,7 @@ do_statement : DO block
 for_loop : FOR LEFT_PARANTHESIS for_statement RIGHT_PARANTHESIS block
 		 ;
 
-for_statement : declaration assignment_operator RHS SEMICOLON boolean_expression SEMICOLON assignment // REMOVED INITILIZE, FOR ONLY WORKS WITH __ for(int x=1;....)__
+for_statement : declaration SEMICOLON boolean_expression SEMICOLON assignment // REMOVED INITILIZE, FOR ONLY WORKS WITH __ for(int x=1;....)__
 			  ;
 
 
