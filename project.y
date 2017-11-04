@@ -45,7 +45,9 @@
 
 %%
 program : statement_list ;
-statement_list : statement | statement_list statement ;
+statement_list : statement 
+               | statement_list statement 
+			   ;
 
 statement : assignment SEMICOLON
 		  | declaration SEMICOLON
@@ -55,10 +57,7 @@ statement : assignment SEMICOLON
 		  | COMMENT
 		  | function_call SEMICOLON
 		  | BREAK SEMICOLON
-		  | CONTINUE SEMICOLON
-		  | RETURN SEMICOLON
-		  | RETURN IDNTF SEMICOLON
-		  | RETURN factor SEMICOLON
+		  | CONTINUE SEMICOLON                     // deleted RETURN factor SEMICOLON RETURN IDNTF SEMICOLON RETURN SEMICOLON
 		  ;
 
 block : LEFT_BRACKET statement_list RIGHT_BRACKET
@@ -176,10 +175,12 @@ condition 	: if_statement
 			;
 
 if_statement 	: IF LEFT_PARANTHESIS boolean_expression RIGHT_PARANTHESIS block
-				| IF LEFT_PARANTHESIS function_call RIGHT_PARANTHESIS block
+				| if_statement LEFT_PARANTHESIS function_call RIGHT_PARANTHESIS block
 				| if_statement ELIF LEFT_PARANTHESIS boolean_expression RIGHT_PARANTHESIS block
+				| if_statement ELIF LEFT_PARANTHESIS function_call RIGHT_PARANTHESIS block             // added an elif block for function  call  
 				| if_statement ELSE block
-				| IFNOT LEFT_PARANTHESIS boolean_expression RIGHT_PARANTHESIS block
+				| if_statement IFNOT LEFT_PARANTHESIS boolean_expression RIGHT_PARANTHESIS block
+				| if_statement IFNOT LEFT_PARANTHESIS function_call RIGHT_PARANTHESIS block                       //added notif block for function call 
 				;
 
 boolean_expression 	: comparison
@@ -212,11 +213,9 @@ relational_operators 	: LESSEQ_OPT
 
 boolean_operators 	: AND_OPT 
 					| OR_OPT
-					// DELETD THE NOT OPERATOR BECAUSE IT IS NOT AN OPERATOR (false ! true)
 					;
 
-switch_statement : SWITCH LEFT_PARANTHESIS IDNTF RIGHT_PARANTHESIS LEFT_BRACKET case_statement 							RIGHT_BRACKET 
-				 | SWITCH LEFT_PARANTHESIS IDNTF LEFT_SQ_BRACKET IDNTF RIGHT_SQ_BRACKET RIGHT_PARANTHESIS LEFT_BRACKET case_statement RIGHT_BRACKET 
+switch_statement : SWITCH LEFT_PARANTHESIS IDNTF RIGHT_PARANTHESIS LEFT_BRACKET case_statement RIGHT_BRACKET 
 				 ;
 
 case_statement 	: CASE IDNTF COLON statement_list

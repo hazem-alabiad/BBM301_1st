@@ -117,10 +117,6 @@ continue		 {
 for						{
              return (FOR);
 }
- /* Function Definition */
-return			 {
-            return (RETURN);
-}
  /* Built-in Functions */
 print				         {
                      return (BLTIN_PRINT);

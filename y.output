@@ -1,0 +1,4060 @@
+   0  $accept : program $end
+
+   1  program : statement_list
+
+   2  statement_list : statement
+   3                 | statement_list statement
+
+   4  statement : assignment SEMICOLON
+   5            | declaration SEMICOLON
+   6            | loop
+   7            | condition
+   8            | GOTO COLON flag SEMICOLON
+   9            | COMMENT
+  10            | function_call SEMICOLON
+  11            | BREAK SEMICOLON
+  12            | CONTINUE SEMICOLON
+  13            | RETURN SEMICOLON
+  14            | RETURN IDNTF SEMICOLON
+  15            | RETURN factor SEMICOLON
+
+  16  block : LEFT_BRACKET statement_list RIGHT_BRACKET
+  17        | LEFT_BRACKET empty RIGHT_BRACKET
+
+  18  declaration : data_type IDNTF
+  19              | declaration assignment_operator RHS
+  20              | ARRAY data_type IDNTF LEFT_SQ_BRACKET INT_LTRL RIGHT_SQ_BRACKET ASSIGNMENT_OPT LEFT_BRACKET factor_list RIGHT_BRACKET
+
+  21  factor_list : factor
+  22              | factor_list COMMA factor
+
+  23  RHS : arithmetic_expression
+  24      | function_call
+  25      | boolean_expression
+
+  26  function_call : BLTIN_PRINT LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS
+  27                | BLTIN_LIST_CONTENTS LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS
+  28                | BLTIN_GET_SIZE LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS
+  29                | BLTIN_CREATE LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS
+  30                | BLTIN_COPY LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS
+  31                | BLTIN_COMPARE LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS
+  32                | BLTIN_CONNECT_TO LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS
+  33                | BLTIN_DELETE LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS
+  34                | BLTIN_RENAME LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS
+  35                | BLTIN_MOVE LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS
+  36                | BLTIN_SORT LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS
+  37                | BLTIN_FILTRE_FILES LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS
+  38                | BLTIN_BACK_UP LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS
+  39                | BLTIN_SYNCHRONIZE LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS
+  40                | BLTIN_SEARCH LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS
+  41                | BLTIN_CD LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS
+  42                | BLTIN_DOWNLOAD LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS
+  43                | BLTIN_UPLOAD LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS
+  44                | BLTIN_OPEN LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS
+  45                | BLTIN_PROPERTIES LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS
+  46                | BLTIN_MOVE_BACK LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS
+  47                | BLTIN_MOVE_FORWARD LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS
+
+  48  identifier_list : empty
+  49                  | IDNTF
+  50                  | identifier_list COMMA IDNTF
+  51                  | factor
+  52                  | identifier_list COMMA factor
+
+  53  arithmetic_expression : factor
+  54                        | arithmetic_expression binary_operator factor
+  55                        | binary_operator arithmetic_expression
+
+  56  binary_operator : ADD_OPT
+  57                  | SUB_OPT
+  58                  | MULTIPLY_OPT
+  59                  | DIVIDE_OPT
+  60                  | POW_OPT
+  61                  | MODE_OPT
+  62                  | BITWISE_LEFTSHIFT
+  63                  | BITWISE_RIGHTSHIFT
+  64                  | BITWISE_AND
+  65                  | BITWISE_OR
+  66                  | BITWISE_XOR
+  67                  | BITWISE_NOR
+  68                  | BITWISE_NOT
+
+  69  factor : INT_LTRL
+  70         | FLT_LTRL
+  71         | STR_LTRL
+  72         | CHR_LTRL
+  73         | DOUBLE_LTRL
+
+  74  assignment_operator : ASSIGNMENT_OPT
+  75                      | MULTIPLY_ASSIGNMENT_OPT
+  76                      | DIVIDE_ASSIGNMENT_OPT
+  77                      | ADD_ASSIGNMENT_OPT
+  78                      | SUB_ASSIGNMENT_OPT
+  79                      | MODE_ASSIGNMENT_OPT
+  80                      | POW_ASSIGNMENT_OPT
+
+  81  assignment : LHS assignment_operator RHS
+  82             | LHS INCREMENT_OPT
+  83             | LHS DECREMENT_OPT
+
+  84  LHS : IDNTF
+  85      | IDNTF LEFT_SQ_BRACKET INT_LTRL RIGHT_SQ_BRACKET
+
+  86  loop : while_loop
+  87       | do_while_loop
+  88       | for_loop
+
+  89  while_loop : WHILE LEFT_PARANTHESIS boolean_expression RIGHT_PARANTHESIS block
+
+  90  do_while_loop : do_statement WHILE LEFT_PARANTHESIS boolean_expression RIGHT_PARANTHESIS SEMICOLON
+
+  91  do_statement : DO block
+
+  92  for_loop : FOR LEFT_PARANTHESIS for_statement RIGHT_PARANTHESIS block
+
+  93  for_statement : declaration SEMICOLON boolean_expression SEMICOLON assignment
+
+  94  condition : if_statement
+  95            | switch_statement
+
+  96  if_statement : IF LEFT_PARANTHESIS boolean_expression RIGHT_PARANTHESIS block
+  97               | IF LEFT_PARANTHESIS function_call RIGHT_PARANTHESIS block
+  98               | if_statement ELIF LEFT_PARANTHESIS boolean_expression RIGHT_PARANTHESIS block
+  99               | if_statement ELSE block
+ 100               | IFNOT LEFT_PARANTHESIS boolean_expression RIGHT_PARANTHESIS block
+
+ 101  boolean_expression : comparison
+ 102                     | IDNTF
+ 103                     | BLN_FALSE
+ 104                     | BLN_TRUE
+ 105                     | NOT_OPT IDNTF
+
+ 106  comparison : boolean_expression boolean_operators compared
+ 107             | factor relational_operators factor
+ 108             | IDNTF relational_operators factor
+ 109             | factor relational_operators IDNTF
+ 110             | IDNTF relational_operators IDNTF
+
+ 111  compared : IDNTF
+ 112           | BLN_FALSE
+ 113           | BLN_TRUE
+ 114           | NOT_OPT IDNTF
+
+ 115  relational_operators : LESSEQ_OPT
+ 116                       | GREATEREQ_OPT
+ 117                       | NEQ_OPT
+ 118                       | EQ_OPT
+ 119                       | LESS_OPT
+ 120                       | GREATER_OPT
+
+ 121  boolean_operators : AND_OPT
+ 122                    | OR_OPT
+
+ 123  switch_statement : SWITCH LEFT_PARANTHESIS IDNTF RIGHT_PARANTHESIS LEFT_BRACKET case_statement RIGHT_BRACKET
+ 124                   | SWITCH LEFT_PARANTHESIS IDNTF LEFT_SQ_BRACKET IDNTF RIGHT_SQ_BRACKET RIGHT_PARANTHESIS LEFT_BRACKET case_statement RIGHT_BRACKET
+
+ 125  case_statement : CASE IDNTF COLON statement_list
+ 126                 | CASE factor COLON statement_list
+ 127                 | case_statement CASE IDNTF COLON statement_list
+ 128                 | case_statement CASE factor COLON statement_list
+ 129                 | case_statement DEFAULT COLON statement_list
+
+ 130  data_type : CHAR
+ 131            | INT
+ 132            | FLOAT
+ 133            | BOOL
+ 134            | BYTE
+ 135            | STRING
+ 136            | DOUBLE
+ 137            | FE
+ 138            | DIRECTORY
+ 139            | LONG_INT
+ 140            | SHORT_INT
+ 141            | SHORT_FLOAT
+ 142            | LONG_DOUBLE
+
+ 143  flag : UNDER_SCORE UNDER_SCORE IDNTF UNDER_SCORE UNDER_SCORE
+
+ 144  empty :
+
+state 0
+	$accept : . program $end  (0)
+
+	INT  shift 1
+	FLOAT  shift 2
+	BOOL  shift 3
+	CHAR  shift 4
+	ARRAY  shift 5
+	BYTE  shift 6
+	STRING  shift 7
+	DOUBLE  shift 8
+	FE  shift 9
+	DIRECTORY  shift 10
+	LONG_INT  shift 11
+	SHORT_INT  shift 12
+	SHORT_FLOAT  shift 13
+	LONG_DOUBLE  shift 14
+	IF  shift 15
+	SWITCH  shift 16
+	IFNOT  shift 17
+	WHILE  shift 18
+	DO  shift 19
+	BREAK  shift 20
+	CONTINUE  shift 21
+	FOR  shift 22
+	RETURN  shift 23
+	BLTIN_PRINT  shift 24
+	BLTIN_LIST_CONTENTS  shift 25
+	BLTIN_GET_SIZE  shift 26
+	BLTIN_CREATE  shift 27
+	BLTIN_COPY  shift 28
+	BLTIN_COMPARE  shift 29
+	BLTIN_CONNECT_TO  shift 30
+	BLTIN_DELETE  shift 31
+	BLTIN_RENAME  shift 32
+	BLTIN_MOVE  shift 33
+	BLTIN_SORT  shift 34
+	BLTIN_FILTRE_FILES  shift 35
+	BLTIN_SYNCHRONIZE  shift 36
+	BLTIN_SEARCH  shift 37
+	BLTIN_CD  shift 38
+	BLTIN_BACK_UP  shift 39
+	BLTIN_DOWNLOAD  shift 40
+	BLTIN_UPLOAD  shift 41
+	BLTIN_OPEN  shift 42
+	BLTIN_PROPERTIES  shift 43
+	BLTIN_MOVE_BACK  shift 44
+	BLTIN_MOVE_FORWARD  shift 45
+	IDNTF  shift 46
+	GOTO  shift 47
+	COMMENT  shift 48
+	.  error
+
+	program  goto 49
+	statement_list  goto 50
+	statement  goto 51
+	assignment  goto 52
+	declaration  goto 53
+	loop  goto 54
+	condition  goto 55
+	function_call  goto 56
+	data_type  goto 57
+	LHS  goto 58
+	while_loop  goto 59
+	do_while_loop  goto 60
+	for_loop  goto 61
+	do_statement  goto 62
+	if_statement  goto 63
+	switch_statement  goto 64
+
+
+state 1
+	data_type : INT .  (131)
+
+	.  reduce 131
+
+
+state 2
+	data_type : FLOAT .  (132)
+
+	.  reduce 132
+
+
+state 3
+	data_type : BOOL .  (133)
+
+	.  reduce 133
+
+
+state 4
+	data_type : CHAR .  (130)
+
+	.  reduce 130
+
+
+state 5
+	declaration : ARRAY . data_type IDNTF LEFT_SQ_BRACKET INT_LTRL RIGHT_SQ_BRACKET ASSIGNMENT_OPT LEFT_BRACKET factor_list RIGHT_BRACKET  (20)
+
+	INT  shift 1
+	FLOAT  shift 2
+	BOOL  shift 3
+	CHAR  shift 4
+	BYTE  shift 6
+	STRING  shift 7
+	DOUBLE  shift 8
+	FE  shift 9
+	DIRECTORY  shift 10
+	LONG_INT  shift 11
+	SHORT_INT  shift 12
+	SHORT_FLOAT  shift 13
+	LONG_DOUBLE  shift 14
+	.  error
+
+	data_type  goto 65
+
+
+state 6
+	data_type : BYTE .  (134)
+
+	.  reduce 134
+
+
+state 7
+	data_type : STRING .  (135)
+
+	.  reduce 135
+
+
+state 8
+	data_type : DOUBLE .  (136)
+
+	.  reduce 136
+
+
+state 9
+	data_type : FE .  (137)
+
+	.  reduce 137
+
+
+state 10
+	data_type : DIRECTORY .  (138)
+
+	.  reduce 138
+
+
+state 11
+	data_type : LONG_INT .  (139)
+
+	.  reduce 139
+
+
+state 12
+	data_type : SHORT_INT .  (140)
+
+	.  reduce 140
+
+
+state 13
+	data_type : SHORT_FLOAT .  (141)
+
+	.  reduce 141
+
+
+state 14
+	data_type : LONG_DOUBLE .  (142)
+
+	.  reduce 142
+
+
+state 15
+	if_statement : IF . LEFT_PARANTHESIS boolean_expression RIGHT_PARANTHESIS block  (96)
+	if_statement : IF . LEFT_PARANTHESIS function_call RIGHT_PARANTHESIS block  (97)
+
+	LEFT_PARANTHESIS  shift 66
+	.  error
+
+
+state 16
+	switch_statement : SWITCH . LEFT_PARANTHESIS IDNTF RIGHT_PARANTHESIS LEFT_BRACKET case_statement RIGHT_BRACKET  (123)
+	switch_statement : SWITCH . LEFT_PARANTHESIS IDNTF LEFT_SQ_BRACKET IDNTF RIGHT_SQ_BRACKET RIGHT_PARANTHESIS LEFT_BRACKET case_statement RIGHT_BRACKET  (124)
+
+	LEFT_PARANTHESIS  shift 67
+	.  error
+
+
+state 17
+	if_statement : IFNOT . LEFT_PARANTHESIS boolean_expression RIGHT_PARANTHESIS block  (100)
+
+	LEFT_PARANTHESIS  shift 68
+	.  error
+
+
+state 18
+	while_loop : WHILE . LEFT_PARANTHESIS boolean_expression RIGHT_PARANTHESIS block  (89)
+
+	LEFT_PARANTHESIS  shift 69
+	.  error
+
+
+state 19
+	do_statement : DO . block  (91)
+
+	LEFT_BRACKET  shift 70
+	.  error
+
+	block  goto 71
+
+
+state 20
+	statement : BREAK . SEMICOLON  (11)
+
+	SEMICOLON  shift 72
+	.  error
+
+
+state 21
+	statement : CONTINUE . SEMICOLON  (12)
+
+	SEMICOLON  shift 73
+	.  error
+
+
+state 22
+	for_loop : FOR . LEFT_PARANTHESIS for_statement RIGHT_PARANTHESIS block  (92)
+
+	LEFT_PARANTHESIS  shift 74
+	.  error
+
+
+state 23
+	statement : RETURN . SEMICOLON  (13)
+	statement : RETURN . IDNTF SEMICOLON  (14)
+	statement : RETURN . factor SEMICOLON  (15)
+
+	INT_LTRL  shift 75
+	FLT_LTRL  shift 76
+	DOUBLE_LTRL  shift 77
+	STR_LTRL  shift 78
+	CHR_LTRL  shift 79
+	IDNTF  shift 80
+	SEMICOLON  shift 81
+	.  error
+
+	factor  goto 82
+
+
+state 24
+	function_call : BLTIN_PRINT . LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS  (26)
+
+	LEFT_PARANTHESIS  shift 83
+	.  error
+
+
+state 25
+	function_call : BLTIN_LIST_CONTENTS . LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS  (27)
+
+	LEFT_PARANTHESIS  shift 84
+	.  error
+
+
+state 26
+	function_call : BLTIN_GET_SIZE . LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS  (28)
+
+	LEFT_PARANTHESIS  shift 85
+	.  error
+
+
+state 27
+	function_call : BLTIN_CREATE . LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS  (29)
+
+	LEFT_PARANTHESIS  shift 86
+	.  error
+
+
+state 28
+	function_call : BLTIN_COPY . LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS  (30)
+
+	LEFT_PARANTHESIS  shift 87
+	.  error
+
+
+state 29
+	function_call : BLTIN_COMPARE . LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS  (31)
+
+	LEFT_PARANTHESIS  shift 88
+	.  error
+
+
+state 30
+	function_call : BLTIN_CONNECT_TO . LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS  (32)
+
+	LEFT_PARANTHESIS  shift 89
+	.  error
+
+
+state 31
+	function_call : BLTIN_DELETE . LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS  (33)
+
+	LEFT_PARANTHESIS  shift 90
+	.  error
+
+
+state 32
+	function_call : BLTIN_RENAME . LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS  (34)
+
+	LEFT_PARANTHESIS  shift 91
+	.  error
+
+
+state 33
+	function_call : BLTIN_MOVE . LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS  (35)
+
+	LEFT_PARANTHESIS  shift 92
+	.  error
+
+
+state 34
+	function_call : BLTIN_SORT . LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS  (36)
+
+	LEFT_PARANTHESIS  shift 93
+	.  error
+
+
+state 35
+	function_call : BLTIN_FILTRE_FILES . LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS  (37)
+
+	LEFT_PARANTHESIS  shift 94
+	.  error
+
+
+state 36
+	function_call : BLTIN_SYNCHRONIZE . LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS  (39)
+
+	LEFT_PARANTHESIS  shift 95
+	.  error
+
+
+state 37
+	function_call : BLTIN_SEARCH . LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS  (40)
+
+	LEFT_PARANTHESIS  shift 96
+	.  error
+
+
+state 38
+	function_call : BLTIN_CD . LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS  (41)
+
+	LEFT_PARANTHESIS  shift 97
+	.  error
+
+
+state 39
+	function_call : BLTIN_BACK_UP . LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS  (38)
+
+	LEFT_PARANTHESIS  shift 98
+	.  error
+
+
+state 40
+	function_call : BLTIN_DOWNLOAD . LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS  (42)
+
+	LEFT_PARANTHESIS  shift 99
+	.  error
+
+
+state 41
+	function_call : BLTIN_UPLOAD . LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS  (43)
+
+	LEFT_PARANTHESIS  shift 100
+	.  error
+
+
+state 42
+	function_call : BLTIN_OPEN . LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS  (44)
+
+	LEFT_PARANTHESIS  shift 101
+	.  error
+
+
+state 43
+	function_call : BLTIN_PROPERTIES . LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS  (45)
+
+	LEFT_PARANTHESIS  shift 102
+	.  error
+
+
+state 44
+	function_call : BLTIN_MOVE_BACK . LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS  (46)
+
+	LEFT_PARANTHESIS  shift 103
+	.  error
+
+
+state 45
+	function_call : BLTIN_MOVE_FORWARD . LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS  (47)
+
+	LEFT_PARANTHESIS  shift 104
+	.  error
+
+
+state 46
+	LHS : IDNTF .  (84)
+	LHS : IDNTF . LEFT_SQ_BRACKET INT_LTRL RIGHT_SQ_BRACKET  (85)
+
+	LEFT_SQ_BRACKET  shift 105
+	ASSIGNMENT_OPT  reduce 84
+	MULTIPLY_ASSIGNMENT_OPT  reduce 84
+	DIVIDE_ASSIGNMENT_OPT  reduce 84
+	MODE_ASSIGNMENT_OPT  reduce 84
+	ADD_ASSIGNMENT_OPT  reduce 84
+	SUB_ASSIGNMENT_OPT  reduce 84
+	POW_ASSIGNMENT_OPT  reduce 84
+	INCREMENT_OPT  reduce 84
+	DECREMENT_OPT  reduce 84
+
+
+state 47
+	statement : GOTO . COLON flag SEMICOLON  (8)
+
+	COLON  shift 106
+	.  error
+
+
+state 48
+	statement : COMMENT .  (9)
+
+	.  reduce 9
+
+
+state 49
+	$accept : program . $end  (0)
+
+	$end  accept
+
+
+state 50
+	program : statement_list .  (1)
+	statement_list : statement_list . statement  (3)
+
+	INT  shift 1
+	FLOAT  shift 2
+	BOOL  shift 3
+	CHAR  shift 4
+	ARRAY  shift 5
+	BYTE  shift 6
+	STRING  shift 7
+	DOUBLE  shift 8
+	FE  shift 9
+	DIRECTORY  shift 10
+	LONG_INT  shift 11
+	SHORT_INT  shift 12
+	SHORT_FLOAT  shift 13
+	LONG_DOUBLE  shift 14
+	IF  shift 15
+	SWITCH  shift 16
+	IFNOT  shift 17
+	WHILE  shift 18
+	DO  shift 19
+	BREAK  shift 20
+	CONTINUE  shift 21
+	FOR  shift 22
+	RETURN  shift 23
+	BLTIN_PRINT  shift 24
+	BLTIN_LIST_CONTENTS  shift 25
+	BLTIN_GET_SIZE  shift 26
+	BLTIN_CREATE  shift 27
+	BLTIN_COPY  shift 28
+	BLTIN_COMPARE  shift 29
+	BLTIN_CONNECT_TO  shift 30
+	BLTIN_DELETE  shift 31
+	BLTIN_RENAME  shift 32
+	BLTIN_MOVE  shift 33
+	BLTIN_SORT  shift 34
+	BLTIN_FILTRE_FILES  shift 35
+	BLTIN_SYNCHRONIZE  shift 36
+	BLTIN_SEARCH  shift 37
+	BLTIN_CD  shift 38
+	BLTIN_BACK_UP  shift 39
+	BLTIN_DOWNLOAD  shift 40
+	BLTIN_UPLOAD  shift 41
+	BLTIN_OPEN  shift 42
+	BLTIN_PROPERTIES  shift 43
+	BLTIN_MOVE_BACK  shift 44
+	BLTIN_MOVE_FORWARD  shift 45
+	IDNTF  shift 46
+	GOTO  shift 47
+	COMMENT  shift 48
+	$end  reduce 1
+
+	statement  goto 107
+	assignment  goto 52
+	declaration  goto 53
+	loop  goto 54
+	condition  goto 55
+	function_call  goto 56
+	data_type  goto 57
+	LHS  goto 58
+	while_loop  goto 59
+	do_while_loop  goto 60
+	for_loop  goto 61
+	do_statement  goto 62
+	if_statement  goto 63
+	switch_statement  goto 64
+
+
+state 51
+	statement_list : statement .  (2)
+
+	.  reduce 2
+
+
+state 52
+	statement : assignment . SEMICOLON  (4)
+
+	SEMICOLON  shift 108
+	.  error
+
+
+state 53
+	statement : declaration . SEMICOLON  (5)
+	declaration : declaration . assignment_operator RHS  (19)
+
+	ASSIGNMENT_OPT  shift 109
+	MULTIPLY_ASSIGNMENT_OPT  shift 110
+	DIVIDE_ASSIGNMENT_OPT  shift 111
+	MODE_ASSIGNMENT_OPT  shift 112
+	ADD_ASSIGNMENT_OPT  shift 113
+	SUB_ASSIGNMENT_OPT  shift 114
+	POW_ASSIGNMENT_OPT  shift 115
+	SEMICOLON  shift 116
+	.  error
+
+	assignment_operator  goto 117
+
+
+state 54
+	statement : loop .  (6)
+
+	.  reduce 6
+
+
+state 55
+	statement : condition .  (7)
+
+	.  reduce 7
+
+
+state 56
+	statement : function_call . SEMICOLON  (10)
+
+	SEMICOLON  shift 118
+	.  error
+
+
+state 57
+	declaration : data_type . IDNTF  (18)
+
+	IDNTF  shift 119
+	.  error
+
+
+state 58
+	assignment : LHS . assignment_operator RHS  (81)
+	assignment : LHS . INCREMENT_OPT  (82)
+	assignment : LHS . DECREMENT_OPT  (83)
+
+	ASSIGNMENT_OPT  shift 109
+	MULTIPLY_ASSIGNMENT_OPT  shift 110
+	DIVIDE_ASSIGNMENT_OPT  shift 111
+	MODE_ASSIGNMENT_OPT  shift 112
+	ADD_ASSIGNMENT_OPT  shift 113
+	SUB_ASSIGNMENT_OPT  shift 114
+	POW_ASSIGNMENT_OPT  shift 115
+	INCREMENT_OPT  shift 120
+	DECREMENT_OPT  shift 121
+	.  error
+
+	assignment_operator  goto 122
+
+
+state 59
+	loop : while_loop .  (86)
+
+	.  reduce 86
+
+
+state 60
+	loop : do_while_loop .  (87)
+
+	.  reduce 87
+
+
+state 61
+	loop : for_loop .  (88)
+
+	.  reduce 88
+
+
+state 62
+	do_while_loop : do_statement . WHILE LEFT_PARANTHESIS boolean_expression RIGHT_PARANTHESIS SEMICOLON  (90)
+
+	WHILE  shift 123
+	.  error
+
+
+state 63
+	condition : if_statement .  (94)
+	if_statement : if_statement . ELIF LEFT_PARANTHESIS boolean_expression RIGHT_PARANTHESIS block  (98)
+	if_statement : if_statement . ELSE block  (99)
+
+	ELSE  shift 124
+	ELIF  shift 125
+	$end  reduce 94
+	INT  reduce 94
+	FLOAT  reduce 94
+	BOOL  reduce 94
+	CHAR  reduce 94
+	ARRAY  reduce 94
+	BYTE  reduce 94
+	STRING  reduce 94
+	DOUBLE  reduce 94
+	FE  reduce 94
+	DIRECTORY  reduce 94
+	LONG_INT  reduce 94
+	SHORT_INT  reduce 94
+	SHORT_FLOAT  reduce 94
+	LONG_DOUBLE  reduce 94
+	IF  reduce 94
+	SWITCH  reduce 94
+	CASE  reduce 94
+	DEFAULT  reduce 94
+	IFNOT  reduce 94
+	WHILE  reduce 94
+	DO  reduce 94
+	BREAK  reduce 94
+	CONTINUE  reduce 94
+	FOR  reduce 94
+	RETURN  reduce 94
+	BLTIN_PRINT  reduce 94
+	BLTIN_LIST_CONTENTS  reduce 94
+	BLTIN_GET_SIZE  reduce 94
+	BLTIN_CREATE  reduce 94
+	BLTIN_COPY  reduce 94
+	BLTIN_COMPARE  reduce 94
+	BLTIN_CONNECT_TO  reduce 94
+	BLTIN_DELETE  reduce 94
+	BLTIN_RENAME  reduce 94
+	BLTIN_MOVE  reduce 94
+	BLTIN_SORT  reduce 94
+	BLTIN_FILTRE_FILES  reduce 94
+	BLTIN_SYNCHRONIZE  reduce 94
+	BLTIN_SEARCH  reduce 94
+	BLTIN_CD  reduce 94
+	BLTIN_BACK_UP  reduce 94
+	BLTIN_DOWNLOAD  reduce 94
+	BLTIN_UPLOAD  reduce 94
+	BLTIN_OPEN  reduce 94
+	BLTIN_PROPERTIES  reduce 94
+	BLTIN_MOVE_BACK  reduce 94
+	BLTIN_MOVE_FORWARD  reduce 94
+	IDNTF  reduce 94
+	GOTO  reduce 94
+	RIGHT_BRACKET  reduce 94
+	COMMENT  reduce 94
+
+
+state 64
+	condition : switch_statement .  (95)
+
+	.  reduce 95
+
+
+state 65
+	declaration : ARRAY data_type . IDNTF LEFT_SQ_BRACKET INT_LTRL RIGHT_SQ_BRACKET ASSIGNMENT_OPT LEFT_BRACKET factor_list RIGHT_BRACKET  (20)
+
+	IDNTF  shift 126
+	.  error
+
+
+state 66
+	if_statement : IF LEFT_PARANTHESIS . boolean_expression RIGHT_PARANTHESIS block  (96)
+	if_statement : IF LEFT_PARANTHESIS . function_call RIGHT_PARANTHESIS block  (97)
+
+	BLN_FALSE  shift 127
+	BLN_TRUE  shift 128
+	NOT_OPT  shift 129
+	BLTIN_PRINT  shift 24
+	BLTIN_LIST_CONTENTS  shift 25
+	BLTIN_GET_SIZE  shift 26
+	BLTIN_CREATE  shift 27
+	BLTIN_COPY  shift 28
+	BLTIN_COMPARE  shift 29
+	BLTIN_CONNECT_TO  shift 30
+	BLTIN_DELETE  shift 31
+	BLTIN_RENAME  shift 32
+	BLTIN_MOVE  shift 33
+	BLTIN_SORT  shift 34
+	BLTIN_FILTRE_FILES  shift 35
+	BLTIN_SYNCHRONIZE  shift 36
+	BLTIN_SEARCH  shift 37
+	BLTIN_CD  shift 38
+	BLTIN_BACK_UP  shift 39
+	BLTIN_DOWNLOAD  shift 40
+	BLTIN_UPLOAD  shift 41
+	BLTIN_OPEN  shift 42
+	BLTIN_PROPERTIES  shift 43
+	BLTIN_MOVE_BACK  shift 44
+	BLTIN_MOVE_FORWARD  shift 45
+	INT_LTRL  shift 75
+	FLT_LTRL  shift 76
+	DOUBLE_LTRL  shift 77
+	STR_LTRL  shift 78
+	CHR_LTRL  shift 79
+	IDNTF  shift 130
+	.  error
+
+	function_call  goto 131
+	factor  goto 132
+	boolean_expression  goto 133
+	comparison  goto 134
+
+
+state 67
+	switch_statement : SWITCH LEFT_PARANTHESIS . IDNTF RIGHT_PARANTHESIS LEFT_BRACKET case_statement RIGHT_BRACKET  (123)
+	switch_statement : SWITCH LEFT_PARANTHESIS . IDNTF LEFT_SQ_BRACKET IDNTF RIGHT_SQ_BRACKET RIGHT_PARANTHESIS LEFT_BRACKET case_statement RIGHT_BRACKET  (124)
+
+	IDNTF  shift 135
+	.  error
+
+
+state 68
+	if_statement : IFNOT LEFT_PARANTHESIS . boolean_expression RIGHT_PARANTHESIS block  (100)
+
+	BLN_FALSE  shift 127
+	BLN_TRUE  shift 128
+	NOT_OPT  shift 129
+	INT_LTRL  shift 75
+	FLT_LTRL  shift 76
+	DOUBLE_LTRL  shift 77
+	STR_LTRL  shift 78
+	CHR_LTRL  shift 79
+	IDNTF  shift 130
+	.  error
+
+	factor  goto 132
+	boolean_expression  goto 136
+	comparison  goto 134
+
+
+state 69
+	while_loop : WHILE LEFT_PARANTHESIS . boolean_expression RIGHT_PARANTHESIS block  (89)
+
+	BLN_FALSE  shift 127
+	BLN_TRUE  shift 128
+	NOT_OPT  shift 129
+	INT_LTRL  shift 75
+	FLT_LTRL  shift 76
+	DOUBLE_LTRL  shift 77
+	STR_LTRL  shift 78
+	CHR_LTRL  shift 79
+	IDNTF  shift 130
+	.  error
+
+	factor  goto 132
+	boolean_expression  goto 137
+	comparison  goto 134
+
+
+state 70
+	block : LEFT_BRACKET . statement_list RIGHT_BRACKET  (16)
+	block : LEFT_BRACKET . empty RIGHT_BRACKET  (17)
+	empty : .  (144)
+
+	INT  shift 1
+	FLOAT  shift 2
+	BOOL  shift 3
+	CHAR  shift 4
+	ARRAY  shift 5
+	BYTE  shift 6
+	STRING  shift 7
+	DOUBLE  shift 8
+	FE  shift 9
+	DIRECTORY  shift 10
+	LONG_INT  shift 11
+	SHORT_INT  shift 12
+	SHORT_FLOAT  shift 13
+	LONG_DOUBLE  shift 14
+	IF  shift 15
+	SWITCH  shift 16
+	IFNOT  shift 17
+	WHILE  shift 18
+	DO  shift 19
+	BREAK  shift 20
+	CONTINUE  shift 21
+	FOR  shift 22
+	RETURN  shift 23
+	BLTIN_PRINT  shift 24
+	BLTIN_LIST_CONTENTS  shift 25
+	BLTIN_GET_SIZE  shift 26
+	BLTIN_CREATE  shift 27
+	BLTIN_COPY  shift 28
+	BLTIN_COMPARE  shift 29
+	BLTIN_CONNECT_TO  shift 30
+	BLTIN_DELETE  shift 31
+	BLTIN_RENAME  shift 32
+	BLTIN_MOVE  shift 33
+	BLTIN_SORT  shift 34
+	BLTIN_FILTRE_FILES  shift 35
+	BLTIN_SYNCHRONIZE  shift 36
+	BLTIN_SEARCH  shift 37
+	BLTIN_CD  shift 38
+	BLTIN_BACK_UP  shift 39
+	BLTIN_DOWNLOAD  shift 40
+	BLTIN_UPLOAD  shift 41
+	BLTIN_OPEN  shift 42
+	BLTIN_PROPERTIES  shift 43
+	BLTIN_MOVE_BACK  shift 44
+	BLTIN_MOVE_FORWARD  shift 45
+	IDNTF  shift 46
+	GOTO  shift 47
+	COMMENT  shift 48
+	RIGHT_BRACKET  reduce 144
+
+	statement_list  goto 138
+	statement  goto 51
+	assignment  goto 52
+	declaration  goto 53
+	loop  goto 54
+	condition  goto 55
+	function_call  goto 56
+	empty  goto 139
+	data_type  goto 57
+	LHS  goto 58
+	while_loop  goto 59
+	do_while_loop  goto 60
+	for_loop  goto 61
+	do_statement  goto 62
+	if_statement  goto 63
+	switch_statement  goto 64
+
+
+state 71
+	do_statement : DO block .  (91)
+
+	.  reduce 91
+
+
+state 72
+	statement : BREAK SEMICOLON .  (11)
+
+	.  reduce 11
+
+
+state 73
+	statement : CONTINUE SEMICOLON .  (12)
+
+	.  reduce 12
+
+
+state 74
+	for_loop : FOR LEFT_PARANTHESIS . for_statement RIGHT_PARANTHESIS block  (92)
+
+	INT  shift 1
+	FLOAT  shift 2
+	BOOL  shift 3
+	CHAR  shift 4
+	ARRAY  shift 5
+	BYTE  shift 6
+	STRING  shift 7
+	DOUBLE  shift 8
+	FE  shift 9
+	DIRECTORY  shift 10
+	LONG_INT  shift 11
+	SHORT_INT  shift 12
+	SHORT_FLOAT  shift 13
+	LONG_DOUBLE  shift 14
+	.  error
+
+	declaration  goto 140
+	data_type  goto 57
+	for_statement  goto 141
+
+
+state 75
+	factor : INT_LTRL .  (69)
+
+	.  reduce 69
+
+
+state 76
+	factor : FLT_LTRL .  (70)
+
+	.  reduce 70
+
+
+state 77
+	factor : DOUBLE_LTRL .  (73)
+
+	.  reduce 73
+
+
+state 78
+	factor : STR_LTRL .  (71)
+
+	.  reduce 71
+
+
+state 79
+	factor : CHR_LTRL .  (72)
+
+	.  reduce 72
+
+
+state 80
+	statement : RETURN IDNTF . SEMICOLON  (14)
+
+	SEMICOLON  shift 142
+	.  error
+
+
+state 81
+	statement : RETURN SEMICOLON .  (13)
+
+	.  reduce 13
+
+
+state 82
+	statement : RETURN factor . SEMICOLON  (15)
+
+	SEMICOLON  shift 143
+	.  error
+
+
+state 83
+	function_call : BLTIN_PRINT LEFT_PARANTHESIS . identifier_list RIGHT_PARANTHESIS  (26)
+	empty : .  (144)
+
+	INT_LTRL  shift 75
+	FLT_LTRL  shift 76
+	DOUBLE_LTRL  shift 77
+	STR_LTRL  shift 78
+	CHR_LTRL  shift 79
+	IDNTF  shift 144
+	COMMA  reduce 144
+	RIGHT_PARANTHESIS  reduce 144
+
+	factor  goto 145
+	empty  goto 146
+	identifier_list  goto 147
+
+
+state 84
+	function_call : BLTIN_LIST_CONTENTS LEFT_PARANTHESIS . identifier_list RIGHT_PARANTHESIS  (27)
+	empty : .  (144)
+
+	INT_LTRL  shift 75
+	FLT_LTRL  shift 76
+	DOUBLE_LTRL  shift 77
+	STR_LTRL  shift 78
+	CHR_LTRL  shift 79
+	IDNTF  shift 144
+	COMMA  reduce 144
+	RIGHT_PARANTHESIS  reduce 144
+
+	factor  goto 145
+	empty  goto 146
+	identifier_list  goto 148
+
+
+state 85
+	function_call : BLTIN_GET_SIZE LEFT_PARANTHESIS . identifier_list RIGHT_PARANTHESIS  (28)
+	empty : .  (144)
+
+	INT_LTRL  shift 75
+	FLT_LTRL  shift 76
+	DOUBLE_LTRL  shift 77
+	STR_LTRL  shift 78
+	CHR_LTRL  shift 79
+	IDNTF  shift 144
+	COMMA  reduce 144
+	RIGHT_PARANTHESIS  reduce 144
+
+	factor  goto 145
+	empty  goto 146
+	identifier_list  goto 149
+
+
+state 86
+	function_call : BLTIN_CREATE LEFT_PARANTHESIS . identifier_list RIGHT_PARANTHESIS  (29)
+	empty : .  (144)
+
+	INT_LTRL  shift 75
+	FLT_LTRL  shift 76
+	DOUBLE_LTRL  shift 77
+	STR_LTRL  shift 78
+	CHR_LTRL  shift 79
+	IDNTF  shift 144
+	COMMA  reduce 144
+	RIGHT_PARANTHESIS  reduce 144
+
+	factor  goto 145
+	empty  goto 146
+	identifier_list  goto 150
+
+
+state 87
+	function_call : BLTIN_COPY LEFT_PARANTHESIS . identifier_list RIGHT_PARANTHESIS  (30)
+	empty : .  (144)
+
+	INT_LTRL  shift 75
+	FLT_LTRL  shift 76
+	DOUBLE_LTRL  shift 77
+	STR_LTRL  shift 78
+	CHR_LTRL  shift 79
+	IDNTF  shift 144
+	COMMA  reduce 144
+	RIGHT_PARANTHESIS  reduce 144
+
+	factor  goto 145
+	empty  goto 146
+	identifier_list  goto 151
+
+
+state 88
+	function_call : BLTIN_COMPARE LEFT_PARANTHESIS . identifier_list RIGHT_PARANTHESIS  (31)
+	empty : .  (144)
+
+	INT_LTRL  shift 75
+	FLT_LTRL  shift 76
+	DOUBLE_LTRL  shift 77
+	STR_LTRL  shift 78
+	CHR_LTRL  shift 79
+	IDNTF  shift 144
+	COMMA  reduce 144
+	RIGHT_PARANTHESIS  reduce 144
+
+	factor  goto 145
+	empty  goto 146
+	identifier_list  goto 152
+
+
+state 89
+	function_call : BLTIN_CONNECT_TO LEFT_PARANTHESIS . identifier_list RIGHT_PARANTHESIS  (32)
+	empty : .  (144)
+
+	INT_LTRL  shift 75
+	FLT_LTRL  shift 76
+	DOUBLE_LTRL  shift 77
+	STR_LTRL  shift 78
+	CHR_LTRL  shift 79
+	IDNTF  shift 144
+	COMMA  reduce 144
+	RIGHT_PARANTHESIS  reduce 144
+
+	factor  goto 145
+	empty  goto 146
+	identifier_list  goto 153
+
+
+state 90
+	function_call : BLTIN_DELETE LEFT_PARANTHESIS . identifier_list RIGHT_PARANTHESIS  (33)
+	empty : .  (144)
+
+	INT_LTRL  shift 75
+	FLT_LTRL  shift 76
+	DOUBLE_LTRL  shift 77
+	STR_LTRL  shift 78
+	CHR_LTRL  shift 79
+	IDNTF  shift 144
+	COMMA  reduce 144
+	RIGHT_PARANTHESIS  reduce 144
+
+	factor  goto 145
+	empty  goto 146
+	identifier_list  goto 154
+
+
+state 91
+	function_call : BLTIN_RENAME LEFT_PARANTHESIS . identifier_list RIGHT_PARANTHESIS  (34)
+	empty : .  (144)
+
+	INT_LTRL  shift 75
+	FLT_LTRL  shift 76
+	DOUBLE_LTRL  shift 77
+	STR_LTRL  shift 78
+	CHR_LTRL  shift 79
+	IDNTF  shift 144
+	COMMA  reduce 144
+	RIGHT_PARANTHESIS  reduce 144
+
+	factor  goto 145
+	empty  goto 146
+	identifier_list  goto 155
+
+
+state 92
+	function_call : BLTIN_MOVE LEFT_PARANTHESIS . identifier_list RIGHT_PARANTHESIS  (35)
+	empty : .  (144)
+
+	INT_LTRL  shift 75
+	FLT_LTRL  shift 76
+	DOUBLE_LTRL  shift 77
+	STR_LTRL  shift 78
+	CHR_LTRL  shift 79
+	IDNTF  shift 144
+	COMMA  reduce 144
+	RIGHT_PARANTHESIS  reduce 144
+
+	factor  goto 145
+	empty  goto 146
+	identifier_list  goto 156
+
+
+state 93
+	function_call : BLTIN_SORT LEFT_PARANTHESIS . identifier_list RIGHT_PARANTHESIS  (36)
+	empty : .  (144)
+
+	INT_LTRL  shift 75
+	FLT_LTRL  shift 76
+	DOUBLE_LTRL  shift 77
+	STR_LTRL  shift 78
+	CHR_LTRL  shift 79
+	IDNTF  shift 144
+	COMMA  reduce 144
+	RIGHT_PARANTHESIS  reduce 144
+
+	factor  goto 145
+	empty  goto 146
+	identifier_list  goto 157
+
+
+state 94
+	function_call : BLTIN_FILTRE_FILES LEFT_PARANTHESIS . identifier_list RIGHT_PARANTHESIS  (37)
+	empty : .  (144)
+
+	INT_LTRL  shift 75
+	FLT_LTRL  shift 76
+	DOUBLE_LTRL  shift 77
+	STR_LTRL  shift 78
+	CHR_LTRL  shift 79
+	IDNTF  shift 144
+	COMMA  reduce 144
+	RIGHT_PARANTHESIS  reduce 144
+
+	factor  goto 145
+	empty  goto 146
+	identifier_list  goto 158
+
+
+state 95
+	function_call : BLTIN_SYNCHRONIZE LEFT_PARANTHESIS . identifier_list RIGHT_PARANTHESIS  (39)
+	empty : .  (144)
+
+	INT_LTRL  shift 75
+	FLT_LTRL  shift 76
+	DOUBLE_LTRL  shift 77
+	STR_LTRL  shift 78
+	CHR_LTRL  shift 79
+	IDNTF  shift 144
+	COMMA  reduce 144
+	RIGHT_PARANTHESIS  reduce 144
+
+	factor  goto 145
+	empty  goto 146
+	identifier_list  goto 159
+
+
+state 96
+	function_call : BLTIN_SEARCH LEFT_PARANTHESIS . identifier_list RIGHT_PARANTHESIS  (40)
+	empty : .  (144)
+
+	INT_LTRL  shift 75
+	FLT_LTRL  shift 76
+	DOUBLE_LTRL  shift 77
+	STR_LTRL  shift 78
+	CHR_LTRL  shift 79
+	IDNTF  shift 144
+	COMMA  reduce 144
+	RIGHT_PARANTHESIS  reduce 144
+
+	factor  goto 145
+	empty  goto 146
+	identifier_list  goto 160
+
+
+state 97
+	function_call : BLTIN_CD LEFT_PARANTHESIS . identifier_list RIGHT_PARANTHESIS  (41)
+	empty : .  (144)
+
+	INT_LTRL  shift 75
+	FLT_LTRL  shift 76
+	DOUBLE_LTRL  shift 77
+	STR_LTRL  shift 78
+	CHR_LTRL  shift 79
+	IDNTF  shift 144
+	COMMA  reduce 144
+	RIGHT_PARANTHESIS  reduce 144
+
+	factor  goto 145
+	empty  goto 146
+	identifier_list  goto 161
+
+
+state 98
+	function_call : BLTIN_BACK_UP LEFT_PARANTHESIS . identifier_list RIGHT_PARANTHESIS  (38)
+	empty : .  (144)
+
+	INT_LTRL  shift 75
+	FLT_LTRL  shift 76
+	DOUBLE_LTRL  shift 77
+	STR_LTRL  shift 78
+	CHR_LTRL  shift 79
+	IDNTF  shift 144
+	COMMA  reduce 144
+	RIGHT_PARANTHESIS  reduce 144
+
+	factor  goto 145
+	empty  goto 146
+	identifier_list  goto 162
+
+
+state 99
+	function_call : BLTIN_DOWNLOAD LEFT_PARANTHESIS . identifier_list RIGHT_PARANTHESIS  (42)
+	empty : .  (144)
+
+	INT_LTRL  shift 75
+	FLT_LTRL  shift 76
+	DOUBLE_LTRL  shift 77
+	STR_LTRL  shift 78
+	CHR_LTRL  shift 79
+	IDNTF  shift 144
+	COMMA  reduce 144
+	RIGHT_PARANTHESIS  reduce 144
+
+	factor  goto 145
+	empty  goto 146
+	identifier_list  goto 163
+
+
+state 100
+	function_call : BLTIN_UPLOAD LEFT_PARANTHESIS . identifier_list RIGHT_PARANTHESIS  (43)
+	empty : .  (144)
+
+	INT_LTRL  shift 75
+	FLT_LTRL  shift 76
+	DOUBLE_LTRL  shift 77
+	STR_LTRL  shift 78
+	CHR_LTRL  shift 79
+	IDNTF  shift 144
+	COMMA  reduce 144
+	RIGHT_PARANTHESIS  reduce 144
+
+	factor  goto 145
+	empty  goto 146
+	identifier_list  goto 164
+
+
+state 101
+	function_call : BLTIN_OPEN LEFT_PARANTHESIS . identifier_list RIGHT_PARANTHESIS  (44)
+	empty : .  (144)
+
+	INT_LTRL  shift 75
+	FLT_LTRL  shift 76
+	DOUBLE_LTRL  shift 77
+	STR_LTRL  shift 78
+	CHR_LTRL  shift 79
+	IDNTF  shift 144
+	COMMA  reduce 144
+	RIGHT_PARANTHESIS  reduce 144
+
+	factor  goto 145
+	empty  goto 146
+	identifier_list  goto 165
+
+
+state 102
+	function_call : BLTIN_PROPERTIES LEFT_PARANTHESIS . identifier_list RIGHT_PARANTHESIS  (45)
+	empty : .  (144)
+
+	INT_LTRL  shift 75
+	FLT_LTRL  shift 76
+	DOUBLE_LTRL  shift 77
+	STR_LTRL  shift 78
+	CHR_LTRL  shift 79
+	IDNTF  shift 144
+	COMMA  reduce 144
+	RIGHT_PARANTHESIS  reduce 144
+
+	factor  goto 145
+	empty  goto 146
+	identifier_list  goto 166
+
+
+state 103
+	function_call : BLTIN_MOVE_BACK LEFT_PARANTHESIS . identifier_list RIGHT_PARANTHESIS  (46)
+	empty : .  (144)
+
+	INT_LTRL  shift 75
+	FLT_LTRL  shift 76
+	DOUBLE_LTRL  shift 77
+	STR_LTRL  shift 78
+	CHR_LTRL  shift 79
+	IDNTF  shift 144
+	COMMA  reduce 144
+	RIGHT_PARANTHESIS  reduce 144
+
+	factor  goto 145
+	empty  goto 146
+	identifier_list  goto 167
+
+
+state 104
+	function_call : BLTIN_MOVE_FORWARD LEFT_PARANTHESIS . identifier_list RIGHT_PARANTHESIS  (47)
+	empty : .  (144)
+
+	INT_LTRL  shift 75
+	FLT_LTRL  shift 76
+	DOUBLE_LTRL  shift 77
+	STR_LTRL  shift 78
+	CHR_LTRL  shift 79
+	IDNTF  shift 144
+	COMMA  reduce 144
+	RIGHT_PARANTHESIS  reduce 144
+
+	factor  goto 145
+	empty  goto 146
+	identifier_list  goto 168
+
+
+state 105
+	LHS : IDNTF LEFT_SQ_BRACKET . INT_LTRL RIGHT_SQ_BRACKET  (85)
+
+	INT_LTRL  shift 169
+	.  error
+
+
+state 106
+	statement : GOTO COLON . flag SEMICOLON  (8)
+
+	UNDER_SCORE  shift 170
+	.  error
+
+	flag  goto 171
+
+
+state 107
+	statement_list : statement_list statement .  (3)
+
+	.  reduce 3
+
+
+state 108
+	statement : assignment SEMICOLON .  (4)
+
+	.  reduce 4
+
+
+state 109
+	assignment_operator : ASSIGNMENT_OPT .  (74)
+
+	.  reduce 74
+
+
+state 110
+	assignment_operator : MULTIPLY_ASSIGNMENT_OPT .  (75)
+
+	.  reduce 75
+
+
+state 111
+	assignment_operator : DIVIDE_ASSIGNMENT_OPT .  (76)
+
+	.  reduce 76
+
+
+state 112
+	assignment_operator : MODE_ASSIGNMENT_OPT .  (79)
+
+	.  reduce 79
+
+
+state 113
+	assignment_operator : ADD_ASSIGNMENT_OPT .  (77)
+
+	.  reduce 77
+
+
+state 114
+	assignment_operator : SUB_ASSIGNMENT_OPT .  (78)
+
+	.  reduce 78
+
+
+state 115
+	assignment_operator : POW_ASSIGNMENT_OPT .  (80)
+
+	.  reduce 80
+
+
+state 116
+	statement : declaration SEMICOLON .  (5)
+
+	.  reduce 5
+
+
+state 117
+	declaration : declaration assignment_operator . RHS  (19)
+
+	BLN_FALSE  shift 127
+	BLN_TRUE  shift 128
+	NOT_OPT  shift 129
+	BLTIN_PRINT  shift 24
+	BLTIN_LIST_CONTENTS  shift 25
+	BLTIN_GET_SIZE  shift 26
+	BLTIN_CREATE  shift 27
+	BLTIN_COPY  shift 28
+	BLTIN_COMPARE  shift 29
+	BLTIN_CONNECT_TO  shift 30
+	BLTIN_DELETE  shift 31
+	BLTIN_RENAME  shift 32
+	BLTIN_MOVE  shift 33
+	BLTIN_SORT  shift 34
+	BLTIN_FILTRE_FILES  shift 35
+	BLTIN_SYNCHRONIZE  shift 36
+	BLTIN_SEARCH  shift 37
+	BLTIN_CD  shift 38
+	BLTIN_BACK_UP  shift 39
+	BLTIN_DOWNLOAD  shift 40
+	BLTIN_UPLOAD  shift 41
+	BLTIN_OPEN  shift 42
+	BLTIN_PROPERTIES  shift 43
+	BLTIN_MOVE_BACK  shift 44
+	BLTIN_MOVE_FORWARD  shift 45
+	DIVIDE_OPT  shift 172
+	MODE_OPT  shift 173
+	ADD_OPT  shift 174
+	SUB_OPT  shift 175
+	POW_OPT  shift 176
+	MULTIPLY_OPT  shift 177
+	INT_LTRL  shift 75
+	FLT_LTRL  shift 76
+	DOUBLE_LTRL  shift 77
+	STR_LTRL  shift 78
+	CHR_LTRL  shift 79
+	IDNTF  shift 130
+	BITWISE_XOR  shift 178
+	BITWISE_NOR  shift 179
+	BITWISE_NOT  shift 180
+	BITWISE_OR  shift 181
+	BITWISE_AND  shift 182
+	BITWISE_LEFTSHIFT  shift 183
+	BITWISE_RIGHTSHIFT  shift 184
+	.  error
+
+	function_call  goto 185
+	factor  goto 186
+	RHS  goto 187
+	arithmetic_expression  goto 188
+	boolean_expression  goto 189
+	binary_operator  goto 190
+	comparison  goto 134
+
+
+state 118
+	statement : function_call SEMICOLON .  (10)
+
+	.  reduce 10
+
+
+state 119
+	declaration : data_type IDNTF .  (18)
+
+	.  reduce 18
+
+
+state 120
+	assignment : LHS INCREMENT_OPT .  (82)
+
+	.  reduce 82
+
+
+state 121
+	assignment : LHS DECREMENT_OPT .  (83)
+
+	.  reduce 83
+
+
+state 122
+	assignment : LHS assignment_operator . RHS  (81)
+
+	BLN_FALSE  shift 127
+	BLN_TRUE  shift 128
+	NOT_OPT  shift 129
+	BLTIN_PRINT  shift 24
+	BLTIN_LIST_CONTENTS  shift 25
+	BLTIN_GET_SIZE  shift 26
+	BLTIN_CREATE  shift 27
+	BLTIN_COPY  shift 28
+	BLTIN_COMPARE  shift 29
+	BLTIN_CONNECT_TO  shift 30
+	BLTIN_DELETE  shift 31
+	BLTIN_RENAME  shift 32
+	BLTIN_MOVE  shift 33
+	BLTIN_SORT  shift 34
+	BLTIN_FILTRE_FILES  shift 35
+	BLTIN_SYNCHRONIZE  shift 36
+	BLTIN_SEARCH  shift 37
+	BLTIN_CD  shift 38
+	BLTIN_BACK_UP  shift 39
+	BLTIN_DOWNLOAD  shift 40
+	BLTIN_UPLOAD  shift 41
+	BLTIN_OPEN  shift 42
+	BLTIN_PROPERTIES  shift 43
+	BLTIN_MOVE_BACK  shift 44
+	BLTIN_MOVE_FORWARD  shift 45
+	DIVIDE_OPT  shift 172
+	MODE_OPT  shift 173
+	ADD_OPT  shift 174
+	SUB_OPT  shift 175
+	POW_OPT  shift 176
+	MULTIPLY_OPT  shift 177
+	INT_LTRL  shift 75
+	FLT_LTRL  shift 76
+	DOUBLE_LTRL  shift 77
+	STR_LTRL  shift 78
+	CHR_LTRL  shift 79
+	IDNTF  shift 130
+	BITWISE_XOR  shift 178
+	BITWISE_NOR  shift 179
+	BITWISE_NOT  shift 180
+	BITWISE_OR  shift 181
+	BITWISE_AND  shift 182
+	BITWISE_LEFTSHIFT  shift 183
+	BITWISE_RIGHTSHIFT  shift 184
+	.  error
+
+	function_call  goto 185
+	factor  goto 186
+	RHS  goto 191
+	arithmetic_expression  goto 188
+	boolean_expression  goto 189
+	binary_operator  goto 190
+	comparison  goto 134
+
+
+state 123
+	do_while_loop : do_statement WHILE . LEFT_PARANTHESIS boolean_expression RIGHT_PARANTHESIS SEMICOLON  (90)
+
+	LEFT_PARANTHESIS  shift 192
+	.  error
+
+
+state 124
+	if_statement : if_statement ELSE . block  (99)
+
+	LEFT_BRACKET  shift 70
+	.  error
+
+	block  goto 193
+
+
+state 125
+	if_statement : if_statement ELIF . LEFT_PARANTHESIS boolean_expression RIGHT_PARANTHESIS block  (98)
+
+	LEFT_PARANTHESIS  shift 194
+	.  error
+
+
+state 126
+	declaration : ARRAY data_type IDNTF . LEFT_SQ_BRACKET INT_LTRL RIGHT_SQ_BRACKET ASSIGNMENT_OPT LEFT_BRACKET factor_list RIGHT_BRACKET  (20)
+
+	LEFT_SQ_BRACKET  shift 195
+	.  error
+
+
+state 127
+	boolean_expression : BLN_FALSE .  (103)
+
+	.  reduce 103
+
+
+state 128
+	boolean_expression : BLN_TRUE .  (104)
+
+	.  reduce 104
+
+
+state 129
+	boolean_expression : NOT_OPT . IDNTF  (105)
+
+	IDNTF  shift 196
+	.  error
+
+
+state 130
+	boolean_expression : IDNTF .  (102)
+	comparison : IDNTF . relational_operators factor  (108)
+	comparison : IDNTF . relational_operators IDNTF  (110)
+
+	LESSEQ_OPT  shift 197
+	GREATEREQ_OPT  shift 198
+	NEQ_OPT  shift 199
+	EQ_OPT  shift 200
+	LESS_OPT  shift 201
+	GREATER_OPT  shift 202
+	AND_OPT  reduce 102
+	OR_OPT  reduce 102
+	ASSIGNMENT_OPT  reduce 102
+	MULTIPLY_ASSIGNMENT_OPT  reduce 102
+	DIVIDE_ASSIGNMENT_OPT  reduce 102
+	MODE_ASSIGNMENT_OPT  reduce 102
+	ADD_ASSIGNMENT_OPT  reduce 102
+	SUB_ASSIGNMENT_OPT  reduce 102
+	POW_ASSIGNMENT_OPT  reduce 102
+	SEMICOLON  reduce 102
+	RIGHT_PARANTHESIS  reduce 102
+
+	relational_operators  goto 203
+
+
+state 131
+	if_statement : IF LEFT_PARANTHESIS function_call . RIGHT_PARANTHESIS block  (97)
+
+	RIGHT_PARANTHESIS  shift 204
+	.  error
+
+
+state 132
+	comparison : factor . relational_operators factor  (107)
+	comparison : factor . relational_operators IDNTF  (109)
+
+	LESSEQ_OPT  shift 197
+	GREATEREQ_OPT  shift 198
+	NEQ_OPT  shift 199
+	EQ_OPT  shift 200
+	LESS_OPT  shift 201
+	GREATER_OPT  shift 202
+	.  error
+
+	relational_operators  goto 205
+
+
+state 133
+	if_statement : IF LEFT_PARANTHESIS boolean_expression . RIGHT_PARANTHESIS block  (96)
+	comparison : boolean_expression . boolean_operators compared  (106)
+
+	AND_OPT  shift 206
+	OR_OPT  shift 207
+	RIGHT_PARANTHESIS  shift 208
+	.  error
+
+	boolean_operators  goto 209
+
+
+state 134
+	boolean_expression : comparison .  (101)
+
+	.  reduce 101
+
+
+state 135
+	switch_statement : SWITCH LEFT_PARANTHESIS IDNTF . RIGHT_PARANTHESIS LEFT_BRACKET case_statement RIGHT_BRACKET  (123)
+	switch_statement : SWITCH LEFT_PARANTHESIS IDNTF . LEFT_SQ_BRACKET IDNTF RIGHT_SQ_BRACKET RIGHT_PARANTHESIS LEFT_BRACKET case_statement RIGHT_BRACKET  (124)
+
+	RIGHT_PARANTHESIS  shift 210
+	LEFT_SQ_BRACKET  shift 211
+	.  error
+
+
+state 136
+	if_statement : IFNOT LEFT_PARANTHESIS boolean_expression . RIGHT_PARANTHESIS block  (100)
+	comparison : boolean_expression . boolean_operators compared  (106)
+
+	AND_OPT  shift 206
+	OR_OPT  shift 207
+	RIGHT_PARANTHESIS  shift 212
+	.  error
+
+	boolean_operators  goto 209
+
+
+state 137
+	while_loop : WHILE LEFT_PARANTHESIS boolean_expression . RIGHT_PARANTHESIS block  (89)
+	comparison : boolean_expression . boolean_operators compared  (106)
+
+	AND_OPT  shift 206
+	OR_OPT  shift 207
+	RIGHT_PARANTHESIS  shift 213
+	.  error
+
+	boolean_operators  goto 209
+
+
+state 138
+	statement_list : statement_list . statement  (3)
+	block : LEFT_BRACKET statement_list . RIGHT_BRACKET  (16)
+
+	INT  shift 1
+	FLOAT  shift 2
+	BOOL  shift 3
+	CHAR  shift 4
+	ARRAY  shift 5
+	BYTE  shift 6
+	STRING  shift 7
+	DOUBLE  shift 8
+	FE  shift 9
+	DIRECTORY  shift 10
+	LONG_INT  shift 11
+	SHORT_INT  shift 12
+	SHORT_FLOAT  shift 13
+	LONG_DOUBLE  shift 14
+	IF  shift 15
+	SWITCH  shift 16
+	IFNOT  shift 17
+	WHILE  shift 18
+	DO  shift 19
+	BREAK  shift 20
+	CONTINUE  shift 21
+	FOR  shift 22
+	RETURN  shift 23
+	BLTIN_PRINT  shift 24
+	BLTIN_LIST_CONTENTS  shift 25
+	BLTIN_GET_SIZE  shift 26
+	BLTIN_CREATE  shift 27
+	BLTIN_COPY  shift 28
+	BLTIN_COMPARE  shift 29
+	BLTIN_CONNECT_TO  shift 30
+	BLTIN_DELETE  shift 31
+	BLTIN_RENAME  shift 32
+	BLTIN_MOVE  shift 33
+	BLTIN_SORT  shift 34
+	BLTIN_FILTRE_FILES  shift 35
+	BLTIN_SYNCHRONIZE  shift 36
+	BLTIN_SEARCH  shift 37
+	BLTIN_CD  shift 38
+	BLTIN_BACK_UP  shift 39
+	BLTIN_DOWNLOAD  shift 40
+	BLTIN_UPLOAD  shift 41
+	BLTIN_OPEN  shift 42
+	BLTIN_PROPERTIES  shift 43
+	BLTIN_MOVE_BACK  shift 44
+	BLTIN_MOVE_FORWARD  shift 45
+	IDNTF  shift 46
+	GOTO  shift 47
+	RIGHT_BRACKET  shift 214
+	COMMENT  shift 48
+	.  error
+
+	statement  goto 107
+	assignment  goto 52
+	declaration  goto 53
+	loop  goto 54
+	condition  goto 55
+	function_call  goto 56
+	data_type  goto 57
+	LHS  goto 58
+	while_loop  goto 59
+	do_while_loop  goto 60
+	for_loop  goto 61
+	do_statement  goto 62
+	if_statement  goto 63
+	switch_statement  goto 64
+
+
+state 139
+	block : LEFT_BRACKET empty . RIGHT_BRACKET  (17)
+
+	RIGHT_BRACKET  shift 215
+	.  error
+
+
+state 140
+	declaration : declaration . assignment_operator RHS  (19)
+	for_statement : declaration . SEMICOLON boolean_expression SEMICOLON assignment  (93)
+
+	ASSIGNMENT_OPT  shift 109
+	MULTIPLY_ASSIGNMENT_OPT  shift 110
+	DIVIDE_ASSIGNMENT_OPT  shift 111
+	MODE_ASSIGNMENT_OPT  shift 112
+	ADD_ASSIGNMENT_OPT  shift 113
+	SUB_ASSIGNMENT_OPT  shift 114
+	POW_ASSIGNMENT_OPT  shift 115
+	SEMICOLON  shift 216
+	.  error
+
+	assignment_operator  goto 117
+
+
+state 141
+	for_loop : FOR LEFT_PARANTHESIS for_statement . RIGHT_PARANTHESIS block  (92)
+
+	RIGHT_PARANTHESIS  shift 217
+	.  error
+
+
+state 142
+	statement : RETURN IDNTF SEMICOLON .  (14)
+
+	.  reduce 14
+
+
+state 143
+	statement : RETURN factor SEMICOLON .  (15)
+
+	.  reduce 15
+
+
+state 144
+	identifier_list : IDNTF .  (49)
+
+	.  reduce 49
+
+
+state 145
+	identifier_list : factor .  (51)
+
+	.  reduce 51
+
+
+state 146
+	identifier_list : empty .  (48)
+
+	.  reduce 48
+
+
+state 147
+	function_call : BLTIN_PRINT LEFT_PARANTHESIS identifier_list . RIGHT_PARANTHESIS  (26)
+	identifier_list : identifier_list . COMMA IDNTF  (50)
+	identifier_list : identifier_list . COMMA factor  (52)
+
+	COMMA  shift 218
+	RIGHT_PARANTHESIS  shift 219
+	.  error
+
+
+state 148
+	function_call : BLTIN_LIST_CONTENTS LEFT_PARANTHESIS identifier_list . RIGHT_PARANTHESIS  (27)
+	identifier_list : identifier_list . COMMA IDNTF  (50)
+	identifier_list : identifier_list . COMMA factor  (52)
+
+	COMMA  shift 218
+	RIGHT_PARANTHESIS  shift 220
+	.  error
+
+
+state 149
+	function_call : BLTIN_GET_SIZE LEFT_PARANTHESIS identifier_list . RIGHT_PARANTHESIS  (28)
+	identifier_list : identifier_list . COMMA IDNTF  (50)
+	identifier_list : identifier_list . COMMA factor  (52)
+
+	COMMA  shift 218
+	RIGHT_PARANTHESIS  shift 221
+	.  error
+
+
+state 150
+	function_call : BLTIN_CREATE LEFT_PARANTHESIS identifier_list . RIGHT_PARANTHESIS  (29)
+	identifier_list : identifier_list . COMMA IDNTF  (50)
+	identifier_list : identifier_list . COMMA factor  (52)
+
+	COMMA  shift 218
+	RIGHT_PARANTHESIS  shift 222
+	.  error
+
+
+state 151
+	function_call : BLTIN_COPY LEFT_PARANTHESIS identifier_list . RIGHT_PARANTHESIS  (30)
+	identifier_list : identifier_list . COMMA IDNTF  (50)
+	identifier_list : identifier_list . COMMA factor  (52)
+
+	COMMA  shift 218
+	RIGHT_PARANTHESIS  shift 223
+	.  error
+
+
+state 152
+	function_call : BLTIN_COMPARE LEFT_PARANTHESIS identifier_list . RIGHT_PARANTHESIS  (31)
+	identifier_list : identifier_list . COMMA IDNTF  (50)
+	identifier_list : identifier_list . COMMA factor  (52)
+
+	COMMA  shift 218
+	RIGHT_PARANTHESIS  shift 224
+	.  error
+
+
+state 153
+	function_call : BLTIN_CONNECT_TO LEFT_PARANTHESIS identifier_list . RIGHT_PARANTHESIS  (32)
+	identifier_list : identifier_list . COMMA IDNTF  (50)
+	identifier_list : identifier_list . COMMA factor  (52)
+
+	COMMA  shift 218
+	RIGHT_PARANTHESIS  shift 225
+	.  error
+
+
+state 154
+	function_call : BLTIN_DELETE LEFT_PARANTHESIS identifier_list . RIGHT_PARANTHESIS  (33)
+	identifier_list : identifier_list . COMMA IDNTF  (50)
+	identifier_list : identifier_list . COMMA factor  (52)
+
+	COMMA  shift 218
+	RIGHT_PARANTHESIS  shift 226
+	.  error
+
+
+state 155
+	function_call : BLTIN_RENAME LEFT_PARANTHESIS identifier_list . RIGHT_PARANTHESIS  (34)
+	identifier_list : identifier_list . COMMA IDNTF  (50)
+	identifier_list : identifier_list . COMMA factor  (52)
+
+	COMMA  shift 218
+	RIGHT_PARANTHESIS  shift 227
+	.  error
+
+
+state 156
+	function_call : BLTIN_MOVE LEFT_PARANTHESIS identifier_list . RIGHT_PARANTHESIS  (35)
+	identifier_list : identifier_list . COMMA IDNTF  (50)
+	identifier_list : identifier_list . COMMA factor  (52)
+
+	COMMA  shift 218
+	RIGHT_PARANTHESIS  shift 228
+	.  error
+
+
+state 157
+	function_call : BLTIN_SORT LEFT_PARANTHESIS identifier_list . RIGHT_PARANTHESIS  (36)
+	identifier_list : identifier_list . COMMA IDNTF  (50)
+	identifier_list : identifier_list . COMMA factor  (52)
+
+	COMMA  shift 218
+	RIGHT_PARANTHESIS  shift 229
+	.  error
+
+
+state 158
+	function_call : BLTIN_FILTRE_FILES LEFT_PARANTHESIS identifier_list . RIGHT_PARANTHESIS  (37)
+	identifier_list : identifier_list . COMMA IDNTF  (50)
+	identifier_list : identifier_list . COMMA factor  (52)
+
+	COMMA  shift 218
+	RIGHT_PARANTHESIS  shift 230
+	.  error
+
+
+state 159
+	function_call : BLTIN_SYNCHRONIZE LEFT_PARANTHESIS identifier_list . RIGHT_PARANTHESIS  (39)
+	identifier_list : identifier_list . COMMA IDNTF  (50)
+	identifier_list : identifier_list . COMMA factor  (52)
+
+	COMMA  shift 218
+	RIGHT_PARANTHESIS  shift 231
+	.  error
+
+
+state 160
+	function_call : BLTIN_SEARCH LEFT_PARANTHESIS identifier_list . RIGHT_PARANTHESIS  (40)
+	identifier_list : identifier_list . COMMA IDNTF  (50)
+	identifier_list : identifier_list . COMMA factor  (52)
+
+	COMMA  shift 218
+	RIGHT_PARANTHESIS  shift 232
+	.  error
+
+
+state 161
+	function_call : BLTIN_CD LEFT_PARANTHESIS identifier_list . RIGHT_PARANTHESIS  (41)
+	identifier_list : identifier_list . COMMA IDNTF  (50)
+	identifier_list : identifier_list . COMMA factor  (52)
+
+	COMMA  shift 218
+	RIGHT_PARANTHESIS  shift 233
+	.  error
+
+
+state 162
+	function_call : BLTIN_BACK_UP LEFT_PARANTHESIS identifier_list . RIGHT_PARANTHESIS  (38)
+	identifier_list : identifier_list . COMMA IDNTF  (50)
+	identifier_list : identifier_list . COMMA factor  (52)
+
+	COMMA  shift 218
+	RIGHT_PARANTHESIS  shift 234
+	.  error
+
+
+state 163
+	function_call : BLTIN_DOWNLOAD LEFT_PARANTHESIS identifier_list . RIGHT_PARANTHESIS  (42)
+	identifier_list : identifier_list . COMMA IDNTF  (50)
+	identifier_list : identifier_list . COMMA factor  (52)
+
+	COMMA  shift 218
+	RIGHT_PARANTHESIS  shift 235
+	.  error
+
+
+state 164
+	function_call : BLTIN_UPLOAD LEFT_PARANTHESIS identifier_list . RIGHT_PARANTHESIS  (43)
+	identifier_list : identifier_list . COMMA IDNTF  (50)
+	identifier_list : identifier_list . COMMA factor  (52)
+
+	COMMA  shift 218
+	RIGHT_PARANTHESIS  shift 236
+	.  error
+
+
+state 165
+	function_call : BLTIN_OPEN LEFT_PARANTHESIS identifier_list . RIGHT_PARANTHESIS  (44)
+	identifier_list : identifier_list . COMMA IDNTF  (50)
+	identifier_list : identifier_list . COMMA factor  (52)
+
+	COMMA  shift 218
+	RIGHT_PARANTHESIS  shift 237
+	.  error
+
+
+state 166
+	function_call : BLTIN_PROPERTIES LEFT_PARANTHESIS identifier_list . RIGHT_PARANTHESIS  (45)
+	identifier_list : identifier_list . COMMA IDNTF  (50)
+	identifier_list : identifier_list . COMMA factor  (52)
+
+	COMMA  shift 218
+	RIGHT_PARANTHESIS  shift 238
+	.  error
+
+
+state 167
+	function_call : BLTIN_MOVE_BACK LEFT_PARANTHESIS identifier_list . RIGHT_PARANTHESIS  (46)
+	identifier_list : identifier_list . COMMA IDNTF  (50)
+	identifier_list : identifier_list . COMMA factor  (52)
+
+	COMMA  shift 218
+	RIGHT_PARANTHESIS  shift 239
+	.  error
+
+
+state 168
+	function_call : BLTIN_MOVE_FORWARD LEFT_PARANTHESIS identifier_list . RIGHT_PARANTHESIS  (47)
+	identifier_list : identifier_list . COMMA IDNTF  (50)
+	identifier_list : identifier_list . COMMA factor  (52)
+
+	COMMA  shift 218
+	RIGHT_PARANTHESIS  shift 240
+	.  error
+
+
+state 169
+	LHS : IDNTF LEFT_SQ_BRACKET INT_LTRL . RIGHT_SQ_BRACKET  (85)
+
+	RIGHT_SQ_BRACKET  shift 241
+	.  error
+
+
+state 170
+	flag : UNDER_SCORE . UNDER_SCORE IDNTF UNDER_SCORE UNDER_SCORE  (143)
+
+	UNDER_SCORE  shift 242
+	.  error
+
+
+state 171
+	statement : GOTO COLON flag . SEMICOLON  (8)
+
+	SEMICOLON  shift 243
+	.  error
+
+
+state 172
+	binary_operator : DIVIDE_OPT .  (59)
+
+	.  reduce 59
+
+
+state 173
+	binary_operator : MODE_OPT .  (61)
+
+	.  reduce 61
+
+
+state 174
+	binary_operator : ADD_OPT .  (56)
+
+	.  reduce 56
+
+
+state 175
+	binary_operator : SUB_OPT .  (57)
+
+	.  reduce 57
+
+
+state 176
+	binary_operator : POW_OPT .  (60)
+
+	.  reduce 60
+
+
+state 177
+	binary_operator : MULTIPLY_OPT .  (58)
+
+	.  reduce 58
+
+
+state 178
+	binary_operator : BITWISE_XOR .  (66)
+
+	.  reduce 66
+
+
+state 179
+	binary_operator : BITWISE_NOR .  (67)
+
+	.  reduce 67
+
+
+state 180
+	binary_operator : BITWISE_NOT .  (68)
+
+	.  reduce 68
+
+
+state 181
+	binary_operator : BITWISE_OR .  (65)
+
+	.  reduce 65
+
+
+state 182
+	binary_operator : BITWISE_AND .  (64)
+
+	.  reduce 64
+
+
+state 183
+	binary_operator : BITWISE_LEFTSHIFT .  (62)
+
+	.  reduce 62
+
+
+state 184
+	binary_operator : BITWISE_RIGHTSHIFT .  (63)
+
+	.  reduce 63
+
+
+state 185
+	RHS : function_call .  (24)
+
+	.  reduce 24
+
+
+state 186
+	arithmetic_expression : factor .  (53)
+	comparison : factor . relational_operators factor  (107)
+	comparison : factor . relational_operators IDNTF  (109)
+
+	LESSEQ_OPT  shift 197
+	GREATEREQ_OPT  shift 198
+	NEQ_OPT  shift 199
+	EQ_OPT  shift 200
+	LESS_OPT  shift 201
+	GREATER_OPT  shift 202
+	ASSIGNMENT_OPT  reduce 53
+	MULTIPLY_ASSIGNMENT_OPT  reduce 53
+	DIVIDE_ASSIGNMENT_OPT  reduce 53
+	MODE_ASSIGNMENT_OPT  reduce 53
+	ADD_ASSIGNMENT_OPT  reduce 53
+	SUB_ASSIGNMENT_OPT  reduce 53
+	POW_ASSIGNMENT_OPT  reduce 53
+	DIVIDE_OPT  reduce 53
+	MODE_OPT  reduce 53
+	ADD_OPT  reduce 53
+	SUB_OPT  reduce 53
+	POW_OPT  reduce 53
+	MULTIPLY_OPT  reduce 53
+	BITWISE_XOR  reduce 53
+	BITWISE_NOR  reduce 53
+	BITWISE_NOT  reduce 53
+	BITWISE_OR  reduce 53
+	BITWISE_AND  reduce 53
+	BITWISE_LEFTSHIFT  reduce 53
+	BITWISE_RIGHTSHIFT  reduce 53
+	SEMICOLON  reduce 53
+	RIGHT_PARANTHESIS  reduce 53
+
+	relational_operators  goto 205
+
+
+state 187
+	declaration : declaration assignment_operator RHS .  (19)
+
+	.  reduce 19
+
+
+state 188
+	RHS : arithmetic_expression .  (23)
+	arithmetic_expression : arithmetic_expression . binary_operator factor  (54)
+
+	DIVIDE_OPT  shift 172
+	MODE_OPT  shift 173
+	ADD_OPT  shift 174
+	SUB_OPT  shift 175
+	POW_OPT  shift 176
+	MULTIPLY_OPT  shift 177
+	BITWISE_XOR  shift 178
+	BITWISE_NOR  shift 179
+	BITWISE_NOT  shift 180
+	BITWISE_OR  shift 181
+	BITWISE_AND  shift 182
+	BITWISE_LEFTSHIFT  shift 183
+	BITWISE_RIGHTSHIFT  shift 184
+	ASSIGNMENT_OPT  reduce 23
+	MULTIPLY_ASSIGNMENT_OPT  reduce 23
+	DIVIDE_ASSIGNMENT_OPT  reduce 23
+	MODE_ASSIGNMENT_OPT  reduce 23
+	ADD_ASSIGNMENT_OPT  reduce 23
+	SUB_ASSIGNMENT_OPT  reduce 23
+	POW_ASSIGNMENT_OPT  reduce 23
+	SEMICOLON  reduce 23
+	RIGHT_PARANTHESIS  reduce 23
+
+	binary_operator  goto 244
+
+
+state 189
+	RHS : boolean_expression .  (25)
+	comparison : boolean_expression . boolean_operators compared  (106)
+
+	AND_OPT  shift 206
+	OR_OPT  shift 207
+	ASSIGNMENT_OPT  reduce 25
+	MULTIPLY_ASSIGNMENT_OPT  reduce 25
+	DIVIDE_ASSIGNMENT_OPT  reduce 25
+	MODE_ASSIGNMENT_OPT  reduce 25
+	ADD_ASSIGNMENT_OPT  reduce 25
+	SUB_ASSIGNMENT_OPT  reduce 25
+	POW_ASSIGNMENT_OPT  reduce 25
+	SEMICOLON  reduce 25
+	RIGHT_PARANTHESIS  reduce 25
+
+	boolean_operators  goto 209
+
+
+state 190
+	arithmetic_expression : binary_operator . arithmetic_expression  (55)
+
+	DIVIDE_OPT  shift 172
+	MODE_OPT  shift 173
+	ADD_OPT  shift 174
+	SUB_OPT  shift 175
+	POW_OPT  shift 176
+	MULTIPLY_OPT  shift 177
+	INT_LTRL  shift 75
+	FLT_LTRL  shift 76
+	DOUBLE_LTRL  shift 77
+	STR_LTRL  shift 78
+	CHR_LTRL  shift 79
+	BITWISE_XOR  shift 178
+	BITWISE_NOR  shift 179
+	BITWISE_NOT  shift 180
+	BITWISE_OR  shift 181
+	BITWISE_AND  shift 182
+	BITWISE_LEFTSHIFT  shift 183
+	BITWISE_RIGHTSHIFT  shift 184
+	.  error
+
+	factor  goto 245
+	arithmetic_expression  goto 246
+	binary_operator  goto 190
+
+
+state 191
+	assignment : LHS assignment_operator RHS .  (81)
+
+	.  reduce 81
+
+
+state 192
+	do_while_loop : do_statement WHILE LEFT_PARANTHESIS . boolean_expression RIGHT_PARANTHESIS SEMICOLON  (90)
+
+	BLN_FALSE  shift 127
+	BLN_TRUE  shift 128
+	NOT_OPT  shift 129
+	INT_LTRL  shift 75
+	FLT_LTRL  shift 76
+	DOUBLE_LTRL  shift 77
+	STR_LTRL  shift 78
+	CHR_LTRL  shift 79
+	IDNTF  shift 130
+	.  error
+
+	factor  goto 132
+	boolean_expression  goto 247
+	comparison  goto 134
+
+
+state 193
+	if_statement : if_statement ELSE block .  (99)
+
+	.  reduce 99
+
+
+state 194
+	if_statement : if_statement ELIF LEFT_PARANTHESIS . boolean_expression RIGHT_PARANTHESIS block  (98)
+
+	BLN_FALSE  shift 127
+	BLN_TRUE  shift 128
+	NOT_OPT  shift 129
+	INT_LTRL  shift 75
+	FLT_LTRL  shift 76
+	DOUBLE_LTRL  shift 77
+	STR_LTRL  shift 78
+	CHR_LTRL  shift 79
+	IDNTF  shift 130
+	.  error
+
+	factor  goto 132
+	boolean_expression  goto 248
+	comparison  goto 134
+
+
+state 195
+	declaration : ARRAY data_type IDNTF LEFT_SQ_BRACKET . INT_LTRL RIGHT_SQ_BRACKET ASSIGNMENT_OPT LEFT_BRACKET factor_list RIGHT_BRACKET  (20)
+
+	INT_LTRL  shift 249
+	.  error
+
+
+state 196
+	boolean_expression : NOT_OPT IDNTF .  (105)
+
+	.  reduce 105
+
+
+state 197
+	relational_operators : LESSEQ_OPT .  (115)
+
+	.  reduce 115
+
+
+state 198
+	relational_operators : GREATEREQ_OPT .  (116)
+
+	.  reduce 116
+
+
+state 199
+	relational_operators : NEQ_OPT .  (117)
+
+	.  reduce 117
+
+
+state 200
+	relational_operators : EQ_OPT .  (118)
+
+	.  reduce 118
+
+
+state 201
+	relational_operators : LESS_OPT .  (119)
+
+	.  reduce 119
+
+
+state 202
+	relational_operators : GREATER_OPT .  (120)
+
+	.  reduce 120
+
+
+state 203
+	comparison : IDNTF relational_operators . factor  (108)
+	comparison : IDNTF relational_operators . IDNTF  (110)
+
+	INT_LTRL  shift 75
+	FLT_LTRL  shift 76
+	DOUBLE_LTRL  shift 77
+	STR_LTRL  shift 78
+	CHR_LTRL  shift 79
+	IDNTF  shift 250
+	.  error
+
+	factor  goto 251
+
+
+state 204
+	if_statement : IF LEFT_PARANTHESIS function_call RIGHT_PARANTHESIS . block  (97)
+
+	LEFT_BRACKET  shift 70
+	.  error
+
+	block  goto 252
+
+
+state 205
+	comparison : factor relational_operators . factor  (107)
+	comparison : factor relational_operators . IDNTF  (109)
+
+	INT_LTRL  shift 75
+	FLT_LTRL  shift 76
+	DOUBLE_LTRL  shift 77
+	STR_LTRL  shift 78
+	CHR_LTRL  shift 79
+	IDNTF  shift 253
+	.  error
+
+	factor  goto 254
+
+
+state 206
+	boolean_operators : AND_OPT .  (121)
+
+	.  reduce 121
+
+
+state 207
+	boolean_operators : OR_OPT .  (122)
+
+	.  reduce 122
+
+
+state 208
+	if_statement : IF LEFT_PARANTHESIS boolean_expression RIGHT_PARANTHESIS . block  (96)
+
+	LEFT_BRACKET  shift 70
+	.  error
+
+	block  goto 255
+
+
+state 209
+	comparison : boolean_expression boolean_operators . compared  (106)
+
+	BLN_FALSE  shift 256
+	BLN_TRUE  shift 257
+	NOT_OPT  shift 258
+	IDNTF  shift 259
+	.  error
+
+	compared  goto 260
+
+
+state 210
+	switch_statement : SWITCH LEFT_PARANTHESIS IDNTF RIGHT_PARANTHESIS . LEFT_BRACKET case_statement RIGHT_BRACKET  (123)
+
+	LEFT_BRACKET  shift 261
+	.  error
+
+
+state 211
+	switch_statement : SWITCH LEFT_PARANTHESIS IDNTF LEFT_SQ_BRACKET . IDNTF RIGHT_SQ_BRACKET RIGHT_PARANTHESIS LEFT_BRACKET case_statement RIGHT_BRACKET  (124)
+
+	IDNTF  shift 262
+	.  error
+
+
+state 212
+	if_statement : IFNOT LEFT_PARANTHESIS boolean_expression RIGHT_PARANTHESIS . block  (100)
+
+	LEFT_BRACKET  shift 70
+	.  error
+
+	block  goto 263
+
+
+state 213
+	while_loop : WHILE LEFT_PARANTHESIS boolean_expression RIGHT_PARANTHESIS . block  (89)
+
+	LEFT_BRACKET  shift 70
+	.  error
+
+	block  goto 264
+
+
+state 214
+	block : LEFT_BRACKET statement_list RIGHT_BRACKET .  (16)
+
+	.  reduce 16
+
+
+state 215
+	block : LEFT_BRACKET empty RIGHT_BRACKET .  (17)
+
+	.  reduce 17
+
+
+state 216
+	for_statement : declaration SEMICOLON . boolean_expression SEMICOLON assignment  (93)
+
+	BLN_FALSE  shift 127
+	BLN_TRUE  shift 128
+	NOT_OPT  shift 129
+	INT_LTRL  shift 75
+	FLT_LTRL  shift 76
+	DOUBLE_LTRL  shift 77
+	STR_LTRL  shift 78
+	CHR_LTRL  shift 79
+	IDNTF  shift 130
+	.  error
+
+	factor  goto 132
+	boolean_expression  goto 265
+	comparison  goto 134
+
+
+state 217
+	for_loop : FOR LEFT_PARANTHESIS for_statement RIGHT_PARANTHESIS . block  (92)
+
+	LEFT_BRACKET  shift 70
+	.  error
+
+	block  goto 266
+
+
+state 218
+	identifier_list : identifier_list COMMA . IDNTF  (50)
+	identifier_list : identifier_list COMMA . factor  (52)
+
+	INT_LTRL  shift 75
+	FLT_LTRL  shift 76
+	DOUBLE_LTRL  shift 77
+	STR_LTRL  shift 78
+	CHR_LTRL  shift 79
+	IDNTF  shift 267
+	.  error
+
+	factor  goto 268
+
+
+state 219
+	function_call : BLTIN_PRINT LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS .  (26)
+
+	.  reduce 26
+
+
+state 220
+	function_call : BLTIN_LIST_CONTENTS LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS .  (27)
+
+	.  reduce 27
+
+
+state 221
+	function_call : BLTIN_GET_SIZE LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS .  (28)
+
+	.  reduce 28
+
+
+state 222
+	function_call : BLTIN_CREATE LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS .  (29)
+
+	.  reduce 29
+
+
+state 223
+	function_call : BLTIN_COPY LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS .  (30)
+
+	.  reduce 30
+
+
+state 224
+	function_call : BLTIN_COMPARE LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS .  (31)
+
+	.  reduce 31
+
+
+state 225
+	function_call : BLTIN_CONNECT_TO LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS .  (32)
+
+	.  reduce 32
+
+
+state 226
+	function_call : BLTIN_DELETE LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS .  (33)
+
+	.  reduce 33
+
+
+state 227
+	function_call : BLTIN_RENAME LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS .  (34)
+
+	.  reduce 34
+
+
+state 228
+	function_call : BLTIN_MOVE LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS .  (35)
+
+	.  reduce 35
+
+
+state 229
+	function_call : BLTIN_SORT LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS .  (36)
+
+	.  reduce 36
+
+
+state 230
+	function_call : BLTIN_FILTRE_FILES LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS .  (37)
+
+	.  reduce 37
+
+
+state 231
+	function_call : BLTIN_SYNCHRONIZE LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS .  (39)
+
+	.  reduce 39
+
+
+state 232
+	function_call : BLTIN_SEARCH LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS .  (40)
+
+	.  reduce 40
+
+
+state 233
+	function_call : BLTIN_CD LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS .  (41)
+
+	.  reduce 41
+
+
+state 234
+	function_call : BLTIN_BACK_UP LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS .  (38)
+
+	.  reduce 38
+
+
+state 235
+	function_call : BLTIN_DOWNLOAD LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS .  (42)
+
+	.  reduce 42
+
+
+state 236
+	function_call : BLTIN_UPLOAD LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS .  (43)
+
+	.  reduce 43
+
+
+state 237
+	function_call : BLTIN_OPEN LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS .  (44)
+
+	.  reduce 44
+
+
+state 238
+	function_call : BLTIN_PROPERTIES LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS .  (45)
+
+	.  reduce 45
+
+
+state 239
+	function_call : BLTIN_MOVE_BACK LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS .  (46)
+
+	.  reduce 46
+
+
+state 240
+	function_call : BLTIN_MOVE_FORWARD LEFT_PARANTHESIS identifier_list RIGHT_PARANTHESIS .  (47)
+
+	.  reduce 47
+
+
+state 241
+	LHS : IDNTF LEFT_SQ_BRACKET INT_LTRL RIGHT_SQ_BRACKET .  (85)
+
+	.  reduce 85
+
+
+state 242
+	flag : UNDER_SCORE UNDER_SCORE . IDNTF UNDER_SCORE UNDER_SCORE  (143)
+
+	IDNTF  shift 269
+	.  error
+
+
+state 243
+	statement : GOTO COLON flag SEMICOLON .  (8)
+
+	.  reduce 8
+
+
+state 244
+	arithmetic_expression : arithmetic_expression binary_operator . factor  (54)
+
+	INT_LTRL  shift 75
+	FLT_LTRL  shift 76
+	DOUBLE_LTRL  shift 77
+	STR_LTRL  shift 78
+	CHR_LTRL  shift 79
+	.  error
+
+	factor  goto 270
+
+
+state 245
+	arithmetic_expression : factor .  (53)
+
+	.  reduce 53
+
+
+246: shift/reduce conflict (shift 172, reduce 55) on DIVIDE_OPT
+246: shift/reduce conflict (shift 173, reduce 55) on MODE_OPT
+246: shift/reduce conflict (shift 174, reduce 55) on ADD_OPT
+246: shift/reduce conflict (shift 175, reduce 55) on SUB_OPT
+246: shift/reduce conflict (shift 176, reduce 55) on POW_OPT
+246: shift/reduce conflict (shift 177, reduce 55) on MULTIPLY_OPT
+246: shift/reduce conflict (shift 178, reduce 55) on BITWISE_XOR
+246: shift/reduce conflict (shift 179, reduce 55) on BITWISE_NOR
+246: shift/reduce conflict (shift 180, reduce 55) on BITWISE_NOT
+246: shift/reduce conflict (shift 181, reduce 55) on BITWISE_OR
+246: shift/reduce conflict (shift 182, reduce 55) on BITWISE_AND
+246: shift/reduce conflict (shift 183, reduce 55) on BITWISE_LEFTSHIFT
+246: shift/reduce conflict (shift 184, reduce 55) on BITWISE_RIGHTSHIFT
+state 246
+	arithmetic_expression : arithmetic_expression . binary_operator factor  (54)
+	arithmetic_expression : binary_operator arithmetic_expression .  (55)
+
+	DIVIDE_OPT  shift 172
+	MODE_OPT  shift 173
+	ADD_OPT  shift 174
+	SUB_OPT  shift 175
+	POW_OPT  shift 176
+	MULTIPLY_OPT  shift 177
+	BITWISE_XOR  shift 178
+	BITWISE_NOR  shift 179
+	BITWISE_NOT  shift 180
+	BITWISE_OR  shift 181
+	BITWISE_AND  shift 182
+	BITWISE_LEFTSHIFT  shift 183
+	BITWISE_RIGHTSHIFT  shift 184
+	ASSIGNMENT_OPT  reduce 55
+	MULTIPLY_ASSIGNMENT_OPT  reduce 55
+	DIVIDE_ASSIGNMENT_OPT  reduce 55
+	MODE_ASSIGNMENT_OPT  reduce 55
+	ADD_ASSIGNMENT_OPT  reduce 55
+	SUB_ASSIGNMENT_OPT  reduce 55
+	POW_ASSIGNMENT_OPT  reduce 55
+	SEMICOLON  reduce 55
+	RIGHT_PARANTHESIS  reduce 55
+
+	binary_operator  goto 244
+
+
+state 247
+	do_while_loop : do_statement WHILE LEFT_PARANTHESIS boolean_expression . RIGHT_PARANTHESIS SEMICOLON  (90)
+	comparison : boolean_expression . boolean_operators compared  (106)
+
+	AND_OPT  shift 206
+	OR_OPT  shift 207
+	RIGHT_PARANTHESIS  shift 271
+	.  error
+
+	boolean_operators  goto 209
+
+
+state 248
+	if_statement : if_statement ELIF LEFT_PARANTHESIS boolean_expression . RIGHT_PARANTHESIS block  (98)
+	comparison : boolean_expression . boolean_operators compared  (106)
+
+	AND_OPT  shift 206
+	OR_OPT  shift 207
+	RIGHT_PARANTHESIS  shift 272
+	.  error
+
+	boolean_operators  goto 209
+
+
+state 249
+	declaration : ARRAY data_type IDNTF LEFT_SQ_BRACKET INT_LTRL . RIGHT_SQ_BRACKET ASSIGNMENT_OPT LEFT_BRACKET factor_list RIGHT_BRACKET  (20)
+
+	RIGHT_SQ_BRACKET  shift 273
+	.  error
+
+
+state 250
+	comparison : IDNTF relational_operators IDNTF .  (110)
+
+	.  reduce 110
+
+
+state 251
+	comparison : IDNTF relational_operators factor .  (108)
+
+	.  reduce 108
+
+
+state 252
+	if_statement : IF LEFT_PARANTHESIS function_call RIGHT_PARANTHESIS block .  (97)
+
+	.  reduce 97
+
+
+state 253
+	comparison : factor relational_operators IDNTF .  (109)
+
+	.  reduce 109
+
+
+state 254
+	comparison : factor relational_operators factor .  (107)
+
+	.  reduce 107
+
+
+state 255
+	if_statement : IF LEFT_PARANTHESIS boolean_expression RIGHT_PARANTHESIS block .  (96)
+
+	.  reduce 96
+
+
+state 256
+	compared : BLN_FALSE .  (112)
+
+	.  reduce 112
+
+
+state 257
+	compared : BLN_TRUE .  (113)
+
+	.  reduce 113
+
+
+state 258
+	compared : NOT_OPT . IDNTF  (114)
+
+	IDNTF  shift 274
+	.  error
+
+
+state 259
+	compared : IDNTF .  (111)
+
+	.  reduce 111
+
+
+state 260
+	comparison : boolean_expression boolean_operators compared .  (106)
+
+	.  reduce 106
+
+
+state 261
+	switch_statement : SWITCH LEFT_PARANTHESIS IDNTF RIGHT_PARANTHESIS LEFT_BRACKET . case_statement RIGHT_BRACKET  (123)
+
+	CASE  shift 275
+	.  error
+
+	case_statement  goto 276
+
+
+state 262
+	switch_statement : SWITCH LEFT_PARANTHESIS IDNTF LEFT_SQ_BRACKET IDNTF . RIGHT_SQ_BRACKET RIGHT_PARANTHESIS LEFT_BRACKET case_statement RIGHT_BRACKET  (124)
+
+	RIGHT_SQ_BRACKET  shift 277
+	.  error
+
+
+state 263
+	if_statement : IFNOT LEFT_PARANTHESIS boolean_expression RIGHT_PARANTHESIS block .  (100)
+
+	.  reduce 100
+
+
+state 264
+	while_loop : WHILE LEFT_PARANTHESIS boolean_expression RIGHT_PARANTHESIS block .  (89)
+
+	.  reduce 89
+
+
+state 265
+	for_statement : declaration SEMICOLON boolean_expression . SEMICOLON assignment  (93)
+	comparison : boolean_expression . boolean_operators compared  (106)
+
+	AND_OPT  shift 206
+	OR_OPT  shift 207
+	SEMICOLON  shift 278
+	.  error
+
+	boolean_operators  goto 209
+
+
+state 266
+	for_loop : FOR LEFT_PARANTHESIS for_statement RIGHT_PARANTHESIS block .  (92)
+
+	.  reduce 92
+
+
+state 267
+	identifier_list : identifier_list COMMA IDNTF .  (50)
+
+	.  reduce 50
+
+
+state 268
+	identifier_list : identifier_list COMMA factor .  (52)
+
+	.  reduce 52
+
+
+state 269
+	flag : UNDER_SCORE UNDER_SCORE IDNTF . UNDER_SCORE UNDER_SCORE  (143)
+
+	UNDER_SCORE  shift 279
+	.  error
+
+
+state 270
+	arithmetic_expression : arithmetic_expression binary_operator factor .  (54)
+
+	.  reduce 54
+
+
+state 271
+	do_while_loop : do_statement WHILE LEFT_PARANTHESIS boolean_expression RIGHT_PARANTHESIS . SEMICOLON  (90)
+
+	SEMICOLON  shift 280
+	.  error
+
+
+state 272
+	if_statement : if_statement ELIF LEFT_PARANTHESIS boolean_expression RIGHT_PARANTHESIS . block  (98)
+
+	LEFT_BRACKET  shift 70
+	.  error
+
+	block  goto 281
+
+
+state 273
+	declaration : ARRAY data_type IDNTF LEFT_SQ_BRACKET INT_LTRL RIGHT_SQ_BRACKET . ASSIGNMENT_OPT LEFT_BRACKET factor_list RIGHT_BRACKET  (20)
+
+	ASSIGNMENT_OPT  shift 282
+	.  error
+
+
+state 274
+	compared : NOT_OPT IDNTF .  (114)
+
+	.  reduce 114
+
+
+state 275
+	case_statement : CASE . IDNTF COLON statement_list  (125)
+	case_statement : CASE . factor COLON statement_list  (126)
+
+	INT_LTRL  shift 75
+	FLT_LTRL  shift 76
+	DOUBLE_LTRL  shift 77
+	STR_LTRL  shift 78
+	CHR_LTRL  shift 79
+	IDNTF  shift 283
+	.  error
+
+	factor  goto 284
+
+
+state 276
+	switch_statement : SWITCH LEFT_PARANTHESIS IDNTF RIGHT_PARANTHESIS LEFT_BRACKET case_statement . RIGHT_BRACKET  (123)
+	case_statement : case_statement . CASE IDNTF COLON statement_list  (127)
+	case_statement : case_statement . CASE factor COLON statement_list  (128)
+	case_statement : case_statement . DEFAULT COLON statement_list  (129)
+
+	CASE  shift 285
+	DEFAULT  shift 286
+	RIGHT_BRACKET  shift 287
+	.  error
+
+
+state 277
+	switch_statement : SWITCH LEFT_PARANTHESIS IDNTF LEFT_SQ_BRACKET IDNTF RIGHT_SQ_BRACKET . RIGHT_PARANTHESIS LEFT_BRACKET case_statement RIGHT_BRACKET  (124)
+
+	RIGHT_PARANTHESIS  shift 288
+	.  error
+
+
+state 278
+	for_statement : declaration SEMICOLON boolean_expression SEMICOLON . assignment  (93)
+
+	IDNTF  shift 46
+	.  error
+
+	assignment  goto 289
+	LHS  goto 58
+
+
+state 279
+	flag : UNDER_SCORE UNDER_SCORE IDNTF UNDER_SCORE . UNDER_SCORE  (143)
+
+	UNDER_SCORE  shift 290
+	.  error
+
+
+state 280
+	do_while_loop : do_statement WHILE LEFT_PARANTHESIS boolean_expression RIGHT_PARANTHESIS SEMICOLON .  (90)
+
+	.  reduce 90
+
+
+state 281
+	if_statement : if_statement ELIF LEFT_PARANTHESIS boolean_expression RIGHT_PARANTHESIS block .  (98)
+
+	.  reduce 98
+
+
+state 282
+	declaration : ARRAY data_type IDNTF LEFT_SQ_BRACKET INT_LTRL RIGHT_SQ_BRACKET ASSIGNMENT_OPT . LEFT_BRACKET factor_list RIGHT_BRACKET  (20)
+
+	LEFT_BRACKET  shift 291
+	.  error
+
+
+state 283
+	case_statement : CASE IDNTF . COLON statement_list  (125)
+
+	COLON  shift 292
+	.  error
+
+
+state 284
+	case_statement : CASE factor . COLON statement_list  (126)
+
+	COLON  shift 293
+	.  error
+
+
+state 285
+	case_statement : case_statement CASE . IDNTF COLON statement_list  (127)
+	case_statement : case_statement CASE . factor COLON statement_list  (128)
+
+	INT_LTRL  shift 75
+	FLT_LTRL  shift 76
+	DOUBLE_LTRL  shift 77
+	STR_LTRL  shift 78
+	CHR_LTRL  shift 79
+	IDNTF  shift 294
+	.  error
+
+	factor  goto 295
+
+
+state 286
+	case_statement : case_statement DEFAULT . COLON statement_list  (129)
+
+	COLON  shift 296
+	.  error
+
+
+state 287
+	switch_statement : SWITCH LEFT_PARANTHESIS IDNTF RIGHT_PARANTHESIS LEFT_BRACKET case_statement RIGHT_BRACKET .  (123)
+
+	.  reduce 123
+
+
+state 288
+	switch_statement : SWITCH LEFT_PARANTHESIS IDNTF LEFT_SQ_BRACKET IDNTF RIGHT_SQ_BRACKET RIGHT_PARANTHESIS . LEFT_BRACKET case_statement RIGHT_BRACKET  (124)
+
+	LEFT_BRACKET  shift 297
+	.  error
+
+
+state 289
+	for_statement : declaration SEMICOLON boolean_expression SEMICOLON assignment .  (93)
+
+	.  reduce 93
+
+
+state 290
+	flag : UNDER_SCORE UNDER_SCORE IDNTF UNDER_SCORE UNDER_SCORE .  (143)
+
+	.  reduce 143
+
+
+state 291
+	declaration : ARRAY data_type IDNTF LEFT_SQ_BRACKET INT_LTRL RIGHT_SQ_BRACKET ASSIGNMENT_OPT LEFT_BRACKET . factor_list RIGHT_BRACKET  (20)
+
+	INT_LTRL  shift 75
+	FLT_LTRL  shift 76
+	DOUBLE_LTRL  shift 77
+	STR_LTRL  shift 78
+	CHR_LTRL  shift 79
+	.  error
+
+	factor  goto 298
+	factor_list  goto 299
+
+
+state 292
+	case_statement : CASE IDNTF COLON . statement_list  (125)
+
+	INT  shift 1
+	FLOAT  shift 2
+	BOOL  shift 3
+	CHAR  shift 4
+	ARRAY  shift 5
+	BYTE  shift 6
+	STRING  shift 7
+	DOUBLE  shift 8
+	FE  shift 9
+	DIRECTORY  shift 10
+	LONG_INT  shift 11
+	SHORT_INT  shift 12
+	SHORT_FLOAT  shift 13
+	LONG_DOUBLE  shift 14
+	IF  shift 15
+	SWITCH  shift 16
+	IFNOT  shift 17
+	WHILE  shift 18
+	DO  shift 19
+	BREAK  shift 20
+	CONTINUE  shift 21
+	FOR  shift 22
+	RETURN  shift 23
+	BLTIN_PRINT  shift 24
+	BLTIN_LIST_CONTENTS  shift 25
+	BLTIN_GET_SIZE  shift 26
+	BLTIN_CREATE  shift 27
+	BLTIN_COPY  shift 28
+	BLTIN_COMPARE  shift 29
+	BLTIN_CONNECT_TO  shift 30
+	BLTIN_DELETE  shift 31
+	BLTIN_RENAME  shift 32
+	BLTIN_MOVE  shift 33
+	BLTIN_SORT  shift 34
+	BLTIN_FILTRE_FILES  shift 35
+	BLTIN_SYNCHRONIZE  shift 36
+	BLTIN_SEARCH  shift 37
+	BLTIN_CD  shift 38
+	BLTIN_BACK_UP  shift 39
+	BLTIN_DOWNLOAD  shift 40
+	BLTIN_UPLOAD  shift 41
+	BLTIN_OPEN  shift 42
+	BLTIN_PROPERTIES  shift 43
+	BLTIN_MOVE_BACK  shift 44
+	BLTIN_MOVE_FORWARD  shift 45
+	IDNTF  shift 46
+	GOTO  shift 47
+	COMMENT  shift 48
+	.  error
+
+	statement_list  goto 300
+	statement  goto 51
+	assignment  goto 52
+	declaration  goto 53
+	loop  goto 54
+	condition  goto 55
+	function_call  goto 56
+	data_type  goto 57
+	LHS  goto 58
+	while_loop  goto 59
+	do_while_loop  goto 60
+	for_loop  goto 61
+	do_statement  goto 62
+	if_statement  goto 63
+	switch_statement  goto 64
+
+
+state 293
+	case_statement : CASE factor COLON . statement_list  (126)
+
+	INT  shift 1
+	FLOAT  shift 2
+	BOOL  shift 3
+	CHAR  shift 4
+	ARRAY  shift 5
+	BYTE  shift 6
+	STRING  shift 7
+	DOUBLE  shift 8
+	FE  shift 9
+	DIRECTORY  shift 10
+	LONG_INT  shift 11
+	SHORT_INT  shift 12
+	SHORT_FLOAT  shift 13
+	LONG_DOUBLE  shift 14
+	IF  shift 15
+	SWITCH  shift 16
+	IFNOT  shift 17
+	WHILE  shift 18
+	DO  shift 19
+	BREAK  shift 20
+	CONTINUE  shift 21
+	FOR  shift 22
+	RETURN  shift 23
+	BLTIN_PRINT  shift 24
+	BLTIN_LIST_CONTENTS  shift 25
+	BLTIN_GET_SIZE  shift 26
+	BLTIN_CREATE  shift 27
+	BLTIN_COPY  shift 28
+	BLTIN_COMPARE  shift 29
+	BLTIN_CONNECT_TO  shift 30
+	BLTIN_DELETE  shift 31
+	BLTIN_RENAME  shift 32
+	BLTIN_MOVE  shift 33
+	BLTIN_SORT  shift 34
+	BLTIN_FILTRE_FILES  shift 35
+	BLTIN_SYNCHRONIZE  shift 36
+	BLTIN_SEARCH  shift 37
+	BLTIN_CD  shift 38
+	BLTIN_BACK_UP  shift 39
+	BLTIN_DOWNLOAD  shift 40
+	BLTIN_UPLOAD  shift 41
+	BLTIN_OPEN  shift 42
+	BLTIN_PROPERTIES  shift 43
+	BLTIN_MOVE_BACK  shift 44
+	BLTIN_MOVE_FORWARD  shift 45
+	IDNTF  shift 46
+	GOTO  shift 47
+	COMMENT  shift 48
+	.  error
+
+	statement_list  goto 301
+	statement  goto 51
+	assignment  goto 52
+	declaration  goto 53
+	loop  goto 54
+	condition  goto 55
+	function_call  goto 56
+	data_type  goto 57
+	LHS  goto 58
+	while_loop  goto 59
+	do_while_loop  goto 60
+	for_loop  goto 61
+	do_statement  goto 62
+	if_statement  goto 63
+	switch_statement  goto 64
+
+
+state 294
+	case_statement : case_statement CASE IDNTF . COLON statement_list  (127)
+
+	COLON  shift 302
+	.  error
+
+
+state 295
+	case_statement : case_statement CASE factor . COLON statement_list  (128)
+
+	COLON  shift 303
+	.  error
+
+
+state 296
+	case_statement : case_statement DEFAULT COLON . statement_list  (129)
+
+	INT  shift 1
+	FLOAT  shift 2
+	BOOL  shift 3
+	CHAR  shift 4
+	ARRAY  shift 5
+	BYTE  shift 6
+	STRING  shift 7
+	DOUBLE  shift 8
+	FE  shift 9
+	DIRECTORY  shift 10
+	LONG_INT  shift 11
+	SHORT_INT  shift 12
+	SHORT_FLOAT  shift 13
+	LONG_DOUBLE  shift 14
+	IF  shift 15
+	SWITCH  shift 16
+	IFNOT  shift 17
+	WHILE  shift 18
+	DO  shift 19
+	BREAK  shift 20
+	CONTINUE  shift 21
+	FOR  shift 22
+	RETURN  shift 23
+	BLTIN_PRINT  shift 24
+	BLTIN_LIST_CONTENTS  shift 25
+	BLTIN_GET_SIZE  shift 26
+	BLTIN_CREATE  shift 27
+	BLTIN_COPY  shift 28
+	BLTIN_COMPARE  shift 29
+	BLTIN_CONNECT_TO  shift 30
+	BLTIN_DELETE  shift 31
+	BLTIN_RENAME  shift 32
+	BLTIN_MOVE  shift 33
+	BLTIN_SORT  shift 34
+	BLTIN_FILTRE_FILES  shift 35
+	BLTIN_SYNCHRONIZE  shift 36
+	BLTIN_SEARCH  shift 37
+	BLTIN_CD  shift 38
+	BLTIN_BACK_UP  shift 39
+	BLTIN_DOWNLOAD  shift 40
+	BLTIN_UPLOAD  shift 41
+	BLTIN_OPEN  shift 42
+	BLTIN_PROPERTIES  shift 43
+	BLTIN_MOVE_BACK  shift 44
+	BLTIN_MOVE_FORWARD  shift 45
+	IDNTF  shift 46
+	GOTO  shift 47
+	COMMENT  shift 48
+	.  error
+
+	statement_list  goto 304
+	statement  goto 51
+	assignment  goto 52
+	declaration  goto 53
+	loop  goto 54
+	condition  goto 55
+	function_call  goto 56
+	data_type  goto 57
+	LHS  goto 58
+	while_loop  goto 59
+	do_while_loop  goto 60
+	for_loop  goto 61
+	do_statement  goto 62
+	if_statement  goto 63
+	switch_statement  goto 64
+
+
+state 297
+	switch_statement : SWITCH LEFT_PARANTHESIS IDNTF LEFT_SQ_BRACKET IDNTF RIGHT_SQ_BRACKET RIGHT_PARANTHESIS LEFT_BRACKET . case_statement RIGHT_BRACKET  (124)
+
+	CASE  shift 275
+	.  error
+
+	case_statement  goto 305
+
+
+state 298
+	factor_list : factor .  (21)
+
+	.  reduce 21
+
+
+state 299
+	declaration : ARRAY data_type IDNTF LEFT_SQ_BRACKET INT_LTRL RIGHT_SQ_BRACKET ASSIGNMENT_OPT LEFT_BRACKET factor_list . RIGHT_BRACKET  (20)
+	factor_list : factor_list . COMMA factor  (22)
+
+	RIGHT_BRACKET  shift 306
+	COMMA  shift 307
+	.  error
+
+
+state 300
+	statement_list : statement_list . statement  (3)
+	case_statement : CASE IDNTF COLON statement_list .  (125)
+
+	INT  shift 1
+	FLOAT  shift 2
+	BOOL  shift 3
+	CHAR  shift 4
+	ARRAY  shift 5
+	BYTE  shift 6
+	STRING  shift 7
+	DOUBLE  shift 8
+	FE  shift 9
+	DIRECTORY  shift 10
+	LONG_INT  shift 11
+	SHORT_INT  shift 12
+	SHORT_FLOAT  shift 13
+	LONG_DOUBLE  shift 14
+	IF  shift 15
+	SWITCH  shift 16
+	IFNOT  shift 17
+	WHILE  shift 18
+	DO  shift 19
+	BREAK  shift 20
+	CONTINUE  shift 21
+	FOR  shift 22
+	RETURN  shift 23
+	BLTIN_PRINT  shift 24
+	BLTIN_LIST_CONTENTS  shift 25
+	BLTIN_GET_SIZE  shift 26
+	BLTIN_CREATE  shift 27
+	BLTIN_COPY  shift 28
+	BLTIN_COMPARE  shift 29
+	BLTIN_CONNECT_TO  shift 30
+	BLTIN_DELETE  shift 31
+	BLTIN_RENAME  shift 32
+	BLTIN_MOVE  shift 33
+	BLTIN_SORT  shift 34
+	BLTIN_FILTRE_FILES  shift 35
+	BLTIN_SYNCHRONIZE  shift 36
+	BLTIN_SEARCH  shift 37
+	BLTIN_CD  shift 38
+	BLTIN_BACK_UP  shift 39
+	BLTIN_DOWNLOAD  shift 40
+	BLTIN_UPLOAD  shift 41
+	BLTIN_OPEN  shift 42
+	BLTIN_PROPERTIES  shift 43
+	BLTIN_MOVE_BACK  shift 44
+	BLTIN_MOVE_FORWARD  shift 45
+	IDNTF  shift 46
+	GOTO  shift 47
+	COMMENT  shift 48
+	CASE  reduce 125
+	DEFAULT  reduce 125
+	RIGHT_BRACKET  reduce 125
+
+	statement  goto 107
+	assignment  goto 52
+	declaration  goto 53
+	loop  goto 54
+	condition  goto 55
+	function_call  goto 56
+	data_type  goto 57
+	LHS  goto 58
+	while_loop  goto 59
+	do_while_loop  goto 60
+	for_loop  goto 61
+	do_statement  goto 62
+	if_statement  goto 63
+	switch_statement  goto 64
+
+
+state 301
+	statement_list : statement_list . statement  (3)
+	case_statement : CASE factor COLON statement_list .  (126)
+
+	INT  shift 1
+	FLOAT  shift 2
+	BOOL  shift 3
+	CHAR  shift 4
+	ARRAY  shift 5
+	BYTE  shift 6
+	STRING  shift 7
+	DOUBLE  shift 8
+	FE  shift 9
+	DIRECTORY  shift 10
+	LONG_INT  shift 11
+	SHORT_INT  shift 12
+	SHORT_FLOAT  shift 13
+	LONG_DOUBLE  shift 14
+	IF  shift 15
+	SWITCH  shift 16
+	IFNOT  shift 17
+	WHILE  shift 18
+	DO  shift 19
+	BREAK  shift 20
+	CONTINUE  shift 21
+	FOR  shift 22
+	RETURN  shift 23
+	BLTIN_PRINT  shift 24
+	BLTIN_LIST_CONTENTS  shift 25
+	BLTIN_GET_SIZE  shift 26
+	BLTIN_CREATE  shift 27
+	BLTIN_COPY  shift 28
+	BLTIN_COMPARE  shift 29
+	BLTIN_CONNECT_TO  shift 30
+	BLTIN_DELETE  shift 31
+	BLTIN_RENAME  shift 32
+	BLTIN_MOVE  shift 33
+	BLTIN_SORT  shift 34
+	BLTIN_FILTRE_FILES  shift 35
+	BLTIN_SYNCHRONIZE  shift 36
+	BLTIN_SEARCH  shift 37
+	BLTIN_CD  shift 38
+	BLTIN_BACK_UP  shift 39
+	BLTIN_DOWNLOAD  shift 40
+	BLTIN_UPLOAD  shift 41
+	BLTIN_OPEN  shift 42
+	BLTIN_PROPERTIES  shift 43
+	BLTIN_MOVE_BACK  shift 44
+	BLTIN_MOVE_FORWARD  shift 45
+	IDNTF  shift 46
+	GOTO  shift 47
+	COMMENT  shift 48
+	CASE  reduce 126
+	DEFAULT  reduce 126
+	RIGHT_BRACKET  reduce 126
+
+	statement  goto 107
+	assignment  goto 52
+	declaration  goto 53
+	loop  goto 54
+	condition  goto 55
+	function_call  goto 56
+	data_type  goto 57
+	LHS  goto 58
+	while_loop  goto 59
+	do_while_loop  goto 60
+	for_loop  goto 61
+	do_statement  goto 62
+	if_statement  goto 63
+	switch_statement  goto 64
+
+
+state 302
+	case_statement : case_statement CASE IDNTF COLON . statement_list  (127)
+
+	INT  shift 1
+	FLOAT  shift 2
+	BOOL  shift 3
+	CHAR  shift 4
+	ARRAY  shift 5
+	BYTE  shift 6
+	STRING  shift 7
+	DOUBLE  shift 8
+	FE  shift 9
+	DIRECTORY  shift 10
+	LONG_INT  shift 11
+	SHORT_INT  shift 12
+	SHORT_FLOAT  shift 13
+	LONG_DOUBLE  shift 14
+	IF  shift 15
+	SWITCH  shift 16
+	IFNOT  shift 17
+	WHILE  shift 18
+	DO  shift 19
+	BREAK  shift 20
+	CONTINUE  shift 21
+	FOR  shift 22
+	RETURN  shift 23
+	BLTIN_PRINT  shift 24
+	BLTIN_LIST_CONTENTS  shift 25
+	BLTIN_GET_SIZE  shift 26
+	BLTIN_CREATE  shift 27
+	BLTIN_COPY  shift 28
+	BLTIN_COMPARE  shift 29
+	BLTIN_CONNECT_TO  shift 30
+	BLTIN_DELETE  shift 31
+	BLTIN_RENAME  shift 32
+	BLTIN_MOVE  shift 33
+	BLTIN_SORT  shift 34
+	BLTIN_FILTRE_FILES  shift 35
+	BLTIN_SYNCHRONIZE  shift 36
+	BLTIN_SEARCH  shift 37
+	BLTIN_CD  shift 38
+	BLTIN_BACK_UP  shift 39
+	BLTIN_DOWNLOAD  shift 40
+	BLTIN_UPLOAD  shift 41
+	BLTIN_OPEN  shift 42
+	BLTIN_PROPERTIES  shift 43
+	BLTIN_MOVE_BACK  shift 44
+	BLTIN_MOVE_FORWARD  shift 45
+	IDNTF  shift 46
+	GOTO  shift 47
+	COMMENT  shift 48
+	.  error
+
+	statement_list  goto 308
+	statement  goto 51
+	assignment  goto 52
+	declaration  goto 53
+	loop  goto 54
+	condition  goto 55
+	function_call  goto 56
+	data_type  goto 57
+	LHS  goto 58
+	while_loop  goto 59
+	do_while_loop  goto 60
+	for_loop  goto 61
+	do_statement  goto 62
+	if_statement  goto 63
+	switch_statement  goto 64
+
+
+state 303
+	case_statement : case_statement CASE factor COLON . statement_list  (128)
+
+	INT  shift 1
+	FLOAT  shift 2
+	BOOL  shift 3
+	CHAR  shift 4
+	ARRAY  shift 5
+	BYTE  shift 6
+	STRING  shift 7
+	DOUBLE  shift 8
+	FE  shift 9
+	DIRECTORY  shift 10
+	LONG_INT  shift 11
+	SHORT_INT  shift 12
+	SHORT_FLOAT  shift 13
+	LONG_DOUBLE  shift 14
+	IF  shift 15
+	SWITCH  shift 16
+	IFNOT  shift 17
+	WHILE  shift 18
+	DO  shift 19
+	BREAK  shift 20
+	CONTINUE  shift 21
+	FOR  shift 22
+	RETURN  shift 23
+	BLTIN_PRINT  shift 24
+	BLTIN_LIST_CONTENTS  shift 25
+	BLTIN_GET_SIZE  shift 26
+	BLTIN_CREATE  shift 27
+	BLTIN_COPY  shift 28
+	BLTIN_COMPARE  shift 29
+	BLTIN_CONNECT_TO  shift 30
+	BLTIN_DELETE  shift 31
+	BLTIN_RENAME  shift 32
+	BLTIN_MOVE  shift 33
+	BLTIN_SORT  shift 34
+	BLTIN_FILTRE_FILES  shift 35
+	BLTIN_SYNCHRONIZE  shift 36
+	BLTIN_SEARCH  shift 37
+	BLTIN_CD  shift 38
+	BLTIN_BACK_UP  shift 39
+	BLTIN_DOWNLOAD  shift 40
+	BLTIN_UPLOAD  shift 41
+	BLTIN_OPEN  shift 42
+	BLTIN_PROPERTIES  shift 43
+	BLTIN_MOVE_BACK  shift 44
+	BLTIN_MOVE_FORWARD  shift 45
+	IDNTF  shift 46
+	GOTO  shift 47
+	COMMENT  shift 48
+	.  error
+
+	statement_list  goto 309
+	statement  goto 51
+	assignment  goto 52
+	declaration  goto 53
+	loop  goto 54
+	condition  goto 55
+	function_call  goto 56
+	data_type  goto 57
+	LHS  goto 58
+	while_loop  goto 59
+	do_while_loop  goto 60
+	for_loop  goto 61
+	do_statement  goto 62
+	if_statement  goto 63
+	switch_statement  goto 64
+
+
+state 304
+	statement_list : statement_list . statement  (3)
+	case_statement : case_statement DEFAULT COLON statement_list .  (129)
+
+	INT  shift 1
+	FLOAT  shift 2
+	BOOL  shift 3
+	CHAR  shift 4
+	ARRAY  shift 5
+	BYTE  shift 6
+	STRING  shift 7
+	DOUBLE  shift 8
+	FE  shift 9
+	DIRECTORY  shift 10
+	LONG_INT  shift 11
+	SHORT_INT  shift 12
+	SHORT_FLOAT  shift 13
+	LONG_DOUBLE  shift 14
+	IF  shift 15
+	SWITCH  shift 16
+	IFNOT  shift 17
+	WHILE  shift 18
+	DO  shift 19
+	BREAK  shift 20
+	CONTINUE  shift 21
+	FOR  shift 22
+	RETURN  shift 23
+	BLTIN_PRINT  shift 24
+	BLTIN_LIST_CONTENTS  shift 25
+	BLTIN_GET_SIZE  shift 26
+	BLTIN_CREATE  shift 27
+	BLTIN_COPY  shift 28
+	BLTIN_COMPARE  shift 29
+	BLTIN_CONNECT_TO  shift 30
+	BLTIN_DELETE  shift 31
+	BLTIN_RENAME  shift 32
+	BLTIN_MOVE  shift 33
+	BLTIN_SORT  shift 34
+	BLTIN_FILTRE_FILES  shift 35
+	BLTIN_SYNCHRONIZE  shift 36
+	BLTIN_SEARCH  shift 37
+	BLTIN_CD  shift 38
+	BLTIN_BACK_UP  shift 39
+	BLTIN_DOWNLOAD  shift 40
+	BLTIN_UPLOAD  shift 41
+	BLTIN_OPEN  shift 42
+	BLTIN_PROPERTIES  shift 43
+	BLTIN_MOVE_BACK  shift 44
+	BLTIN_MOVE_FORWARD  shift 45
+	IDNTF  shift 46
+	GOTO  shift 47
+	COMMENT  shift 48
+	CASE  reduce 129
+	DEFAULT  reduce 129
+	RIGHT_BRACKET  reduce 129
+
+	statement  goto 107
+	assignment  goto 52
+	declaration  goto 53
+	loop  goto 54
+	condition  goto 55
+	function_call  goto 56
+	data_type  goto 57
+	LHS  goto 58
+	while_loop  goto 59
+	do_while_loop  goto 60
+	for_loop  goto 61
+	do_statement  goto 62
+	if_statement  goto 63
+	switch_statement  goto 64
+
+
+state 305
+	switch_statement : SWITCH LEFT_PARANTHESIS IDNTF LEFT_SQ_BRACKET IDNTF RIGHT_SQ_BRACKET RIGHT_PARANTHESIS LEFT_BRACKET case_statement . RIGHT_BRACKET  (124)
+	case_statement : case_statement . CASE IDNTF COLON statement_list  (127)
+	case_statement : case_statement . CASE factor COLON statement_list  (128)
+	case_statement : case_statement . DEFAULT COLON statement_list  (129)
+
+	CASE  shift 285
+	DEFAULT  shift 286
+	RIGHT_BRACKET  shift 310
+	.  error
+
+
+state 306
+	declaration : ARRAY data_type IDNTF LEFT_SQ_BRACKET INT_LTRL RIGHT_SQ_BRACKET ASSIGNMENT_OPT LEFT_BRACKET factor_list RIGHT_BRACKET .  (20)
+
+	.  reduce 20
+
+
+state 307
+	factor_list : factor_list COMMA . factor  (22)
+
+	INT_LTRL  shift 75
+	FLT_LTRL  shift 76
+	DOUBLE_LTRL  shift 77
+	STR_LTRL  shift 78
+	CHR_LTRL  shift 79
+	.  error
+
+	factor  goto 311
+
+
+state 308
+	statement_list : statement_list . statement  (3)
+	case_statement : case_statement CASE IDNTF COLON statement_list .  (127)
+
+	INT  shift 1
+	FLOAT  shift 2
+	BOOL  shift 3
+	CHAR  shift 4
+	ARRAY  shift 5
+	BYTE  shift 6
+	STRING  shift 7
+	DOUBLE  shift 8
+	FE  shift 9
+	DIRECTORY  shift 10
+	LONG_INT  shift 11
+	SHORT_INT  shift 12
+	SHORT_FLOAT  shift 13
+	LONG_DOUBLE  shift 14
+	IF  shift 15
+	SWITCH  shift 16
+	IFNOT  shift 17
+	WHILE  shift 18
+	DO  shift 19
+	BREAK  shift 20
+	CONTINUE  shift 21
+	FOR  shift 22
+	RETURN  shift 23
+	BLTIN_PRINT  shift 24
+	BLTIN_LIST_CONTENTS  shift 25
+	BLTIN_GET_SIZE  shift 26
+	BLTIN_CREATE  shift 27
+	BLTIN_COPY  shift 28
+	BLTIN_COMPARE  shift 29
+	BLTIN_CONNECT_TO  shift 30
+	BLTIN_DELETE  shift 31
+	BLTIN_RENAME  shift 32
+	BLTIN_MOVE  shift 33
+	BLTIN_SORT  shift 34
+	BLTIN_FILTRE_FILES  shift 35
+	BLTIN_SYNCHRONIZE  shift 36
+	BLTIN_SEARCH  shift 37
+	BLTIN_CD  shift 38
+	BLTIN_BACK_UP  shift 39
+	BLTIN_DOWNLOAD  shift 40
+	BLTIN_UPLOAD  shift 41
+	BLTIN_OPEN  shift 42
+	BLTIN_PROPERTIES  shift 43
+	BLTIN_MOVE_BACK  shift 44
+	BLTIN_MOVE_FORWARD  shift 45
+	IDNTF  shift 46
+	GOTO  shift 47
+	COMMENT  shift 48
+	CASE  reduce 127
+	DEFAULT  reduce 127
+	RIGHT_BRACKET  reduce 127
+
+	statement  goto 107
+	assignment  goto 52
+	declaration  goto 53
+	loop  goto 54
+	condition  goto 55
+	function_call  goto 56
+	data_type  goto 57
+	LHS  goto 58
+	while_loop  goto 59
+	do_while_loop  goto 60
+	for_loop  goto 61
+	do_statement  goto 62
+	if_statement  goto 63
+	switch_statement  goto 64
+
+
+state 309
+	statement_list : statement_list . statement  (3)
+	case_statement : case_statement CASE factor COLON statement_list .  (128)
+
+	INT  shift 1
+	FLOAT  shift 2
+	BOOL  shift 3
+	CHAR  shift 4
+	ARRAY  shift 5
+	BYTE  shift 6
+	STRING  shift 7
+	DOUBLE  shift 8
+	FE  shift 9
+	DIRECTORY  shift 10
+	LONG_INT  shift 11
+	SHORT_INT  shift 12
+	SHORT_FLOAT  shift 13
+	LONG_DOUBLE  shift 14
+	IF  shift 15
+	SWITCH  shift 16
+	IFNOT  shift 17
+	WHILE  shift 18
+	DO  shift 19
+	BREAK  shift 20
+	CONTINUE  shift 21
+	FOR  shift 22
+	RETURN  shift 23
+	BLTIN_PRINT  shift 24
+	BLTIN_LIST_CONTENTS  shift 25
+	BLTIN_GET_SIZE  shift 26
+	BLTIN_CREATE  shift 27
+	BLTIN_COPY  shift 28
+	BLTIN_COMPARE  shift 29
+	BLTIN_CONNECT_TO  shift 30
+	BLTIN_DELETE  shift 31
+	BLTIN_RENAME  shift 32
+	BLTIN_MOVE  shift 33
+	BLTIN_SORT  shift 34
+	BLTIN_FILTRE_FILES  shift 35
+	BLTIN_SYNCHRONIZE  shift 36
+	BLTIN_SEARCH  shift 37
+	BLTIN_CD  shift 38
+	BLTIN_BACK_UP  shift 39
+	BLTIN_DOWNLOAD  shift 40
+	BLTIN_UPLOAD  shift 41
+	BLTIN_OPEN  shift 42
+	BLTIN_PROPERTIES  shift 43
+	BLTIN_MOVE_BACK  shift 44
+	BLTIN_MOVE_FORWARD  shift 45
+	IDNTF  shift 46
+	GOTO  shift 47
+	COMMENT  shift 48
+	CASE  reduce 128
+	DEFAULT  reduce 128
+	RIGHT_BRACKET  reduce 128
+
+	statement  goto 107
+	assignment  goto 52
+	declaration  goto 53
+	loop  goto 54
+	condition  goto 55
+	function_call  goto 56
+	data_type  goto 57
+	LHS  goto 58
+	while_loop  goto 59
+	do_while_loop  goto 60
+	for_loop  goto 61
+	do_statement  goto 62
+	if_statement  goto 63
+	switch_statement  goto 64
+
+
+state 310
+	switch_statement : SWITCH LEFT_PARANTHESIS IDNTF LEFT_SQ_BRACKET IDNTF RIGHT_SQ_BRACKET RIGHT_PARANTHESIS LEFT_BRACKET case_statement RIGHT_BRACKET .  (124)
+
+	.  reduce 124
+
+
+state 311
+	factor_list : factor_list COMMA factor .  (22)
+
+	.  reduce 22
+
+
+State 246 contains 13 shift/reduce conflicts.
+
+
+109 terminals, 34 nonterminals
+145 grammar rules, 312 states
