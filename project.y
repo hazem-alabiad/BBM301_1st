@@ -1,7 +1,7 @@
 %{
+		#include<stdio.h>
 	void yyerror (char *s);
 	int yylex();
-	#include<stdio.h>
 %}
 
 %union{  // Later to be diccussed
@@ -108,21 +108,25 @@ identifier_list : empty
 				| identifier_list COMMA factor
 				;
 
-arithmetic_expression 	: factor
-						| arithmetic_expression ADD_OPT factor
-						| arithmetic_expression SUB_OPT factor
-						| arithmetic_expression MULTIPLY_OPT factor
-						| arithmetic_expression DIVIDE_OPT factor
-						| arithmetic_expression POW_OPT factor
-						| arithmetic_expression MODE_OPT factor
-						| arithmetic_expression BITWISE_LEFTSHIFT factor
-						| arithmetic_expression BITWISE_RIGHTSHIFT factor
-						| arithmetic_expression BITWISE_AND factor
-						| arithmetic_expression BITWISE_OR factor
-						| arithmetic_expression BITWISE_XOR factor
-						| arithmetic_expression BITWISE_NOR factor
+arithmetic_expression 	: operand
+						| arithmetic_expression ADD_OPT operand
+						| arithmetic_expression SUB_OPT operand
+						| arithmetic_expression MULTIPLY_OPT operand
+						| arithmetic_expression DIVIDE_OPT operand
+						| arithmetic_expression POW_OPT operand
+						| arithmetic_expression MODE_OPT operand
+						| arithmetic_expression BITWISE_LEFTSHIFT operand
+						| arithmetic_expression BITWISE_RIGHTSHIFT operand
+						| arithmetic_expression BITWISE_AND operand
+						| arithmetic_expression BITWISE_OR operand
+						| arithmetic_expression BITWISE_XOR operand
+						| arithmetic_expression BITWISE_NOR operand
 						| BITWISE_NOT arithmetic_expression  
 						;
+
+operand : factor 
+        | IDNTF 
+		;
 
 factor 	: INT_LTRL
 		| FLT_LTRL 
@@ -175,19 +179,17 @@ condition 	: if_statement
 			;
 
 if_statement 	: IF LEFT_PARANTHESIS boolean_expression RIGHT_PARANTHESIS block
-				| if_statement LEFT_PARANTHESIS function_call RIGHT_PARANTHESIS block
+				| IF LEFT_PARANTHESIS function_call RIGHT_PARANTHESIS block
+				| IFNOT LEFT_PARANTHESIS boolean_expression RIGHT_PARANTHESIS block
+				| IFNOT LEFT_PARANTHESIS function_call RIGHT_PARANTHESIS block                       //added notif block for function call
 				| if_statement ELIF LEFT_PARANTHESIS boolean_expression RIGHT_PARANTHESIS block
 				| if_statement ELIF LEFT_PARANTHESIS function_call RIGHT_PARANTHESIS block             // added an elif block for function  call  
-				| if_statement ELSE block
-				| if_statement IFNOT LEFT_PARANTHESIS boolean_expression RIGHT_PARANTHESIS block
-				| if_statement IFNOT LEFT_PARANTHESIS function_call RIGHT_PARANTHESIS block                       //added notif block for function call 
+				| if_statement ELSE block 
 				;
 
-boolean_expression 	: comparison
-					| IDNTF
+boolean_expression 	: comparison                    // deleted IDNTF AND NOT IDNTF to solve issue with arithmetic_expression reduce conflict
 					| BLN_FALSE 
 					| BLN_TRUE
-					| NOT_OPT IDNTF
 					;
 
 comparison 	: 	boolean_expression boolean_operators compared // boolean operators only for boolean values (false and true, .....)
