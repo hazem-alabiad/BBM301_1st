@@ -155,7 +155,7 @@ filtreFiles          {
                      return (BLTIN_FILTRE_FILES); 
 }
 backup               {
-                    return (BLTIN_BACKUP); 
+                    return (BLTIN_BACK_UP); 
 }
 synchronize          { 
                     return  (BLTIN_SYNCHRONIZE);

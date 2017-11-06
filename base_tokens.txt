@@ -73,7 +73,7 @@ Built-in Functions
 "move"                  BLTIN_MOVE 
 "sort"                  BLTIN_SORT 
 "filtreFiles"           BLTIN_FILTRE_FILES 
-"backup"                BLTIN_BACKUP 
+"backup"                BLTIN_BACK_UP 
 "synchronize"           BLTIN_SYNCHRONIZE 
 "search"                BLTIN_SEARCH 
 "cd"                    BLTIN_CD 
