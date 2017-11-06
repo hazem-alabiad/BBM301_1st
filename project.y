@@ -78,7 +78,7 @@ RHS : arithmetic_expression
 	| boolean_expression
 	;
 
-function_call 	:  BLTIN_PRINT LEFT_PARANTHESIS identifier RIGHT_PARANTHESIS//takes one parrameter
+function_call 	: BLTIN_PRINT LEFT_PARANTHESIS identifier RIGHT_PARANTHESIS//takes one parrameter
 				| BLTIN_LIST_CONTENTS LEFT_PARANTHESIS identifier RIGHT_PARANTHESIS// takes one parameter
 				| BLTIN_GET_SIZE LEFT_PARANTHESIS identifier RIGHT_PARANTHESIS//takes one parameter
 				| BLTIN_CREATE LEFT_PARANTHESIS identifier RIGHT_PARANTHESIS//takes one parameter
@@ -101,9 +101,9 @@ function_call 	:  BLTIN_PRINT LEFT_PARANTHESIS identifier RIGHT_PARANTHESIS//tak
 				| BLTIN_MOVE_BACK LEFT_PARANTHESIS empty RIGHT_PARANTHESIS//zero
 				| BLTIN_MOVE_FORWARD LEFT_PARANTHESIS empty RIGHT_PARANTHESIS//zero
 		;
-identifier :		IDNTF 
-				|STRING
-				;
+identifier : IDNTF 
+			|STR_LTRL
+			;
 
 arithmetic_expression 	: operand
 						| arithmetic_expression ADD_OPT operand
