@@ -6,3 +6,5 @@ y\.tab\.c
 lex\.yy\.c
 
 project
+
+input\.txt
