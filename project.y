@@ -112,7 +112,8 @@ identifier :	 IDNTF
 				|STRING
 				| error {                                   //Check wheather the parameter is acceptable or not
 			     yyerror1(" >>>> Unacceptable function parameter\n");
-				 yyerrok;yyclearin;}
+				 yyerrok;
+				 yyclearin;}
 				;
 
 arithmetic_expression 	: operand
@@ -268,4 +269,4 @@ int main (void){
 	return 0;
 }
 
-void yyerror (char *s) {fprintf (stderr, "%s\n", s);}
+void yyerror1 (char *s) {fprintf (stderr, "%s", s);}
