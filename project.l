@@ -1,7 +1,7 @@
 /* Project.l */
 /* FOR LATTER DISCUSS             Long_float Short_double*/
 %{
-#include "y.tab.h"
+#include "project.tab.h"
 %}
 Digit [0-9]
 Letter [a-zA-Z]
@@ -13,7 +13,6 @@ IDNTF {Letter}({Digit}|{Letter})*
 NEW_LINE (\r|\n|\r\n)				
 WHITE_SPACE [ \t\v\f]+
 COMM \/\*.*?\*\/
-%option yylineno
 %%
 ({WHITE_SPACE}) ;
 ({NEW_LINE}) ;
