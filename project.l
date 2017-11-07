@@ -331,4 +331,7 @@ goto		     {
 }
 %%
 int yywrap (void) {return 1;}
-void yyerror (char *s) {printf("the line num is %s",yylineno);}
+void yyerror(char *str)
+{
+    fprintf(stderr,"Error | Line: %d\n%s\n",yylineno,str);
+}
