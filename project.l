@@ -1,7 +1,7 @@
 /* Project.l */
 /* FOR LATTER DISCUSS             Long_float Short_double*/
 %{
-#include "y.tab.h"
+#include "project.tab.h"
 %}
 Digit [0-9]
 Letter [a-zA-Z]
