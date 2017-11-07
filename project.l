@@ -13,6 +13,7 @@ IDNTF {Letter}({Digit}|{Letter})*
 NEW_LINE (\r|\n|\r\n)				
 WHITE_SPACE [ \t\v\f]+
 COMM \/\*.*?\*\/
+%option yylineno
 %%
 ({WHITE_SPACE}) ;
 ({NEW_LINE}) ;
@@ -330,3 +331,4 @@ goto		     {
 }
 %%
 int yywrap (void) {return 1;}
+void yyerror (char *s) {printf("the line num is %s",yylineno);}

@@ -46,7 +46,7 @@
 %%
 program : statement_list ;
 statement_list : statement 
-               | statement_list statement 
+               | statement_list statement
 			   ;
 
 statement : assignment SEMICOLON
@@ -57,7 +57,10 @@ statement : assignment SEMICOLON
 		  | COMMENT
 		  | function_call SEMICOLON
 		  | BREAK SEMICOLON
-		  | CONTINUE SEMICOLON                     // deleted RETURN factor SEMICOLON RETURN IDNTF SEMICOLON RETURN SEMICOLON
+		  | CONTINUE SEMICOLON                   // deleted RETURN factor SEMICOLON RETURN IDNTF SEMICOLON RETURN SEMICOLON
+		  | error SEMICOLON
+		  | error  {yyclearin; /* discard lookahead */
+                 		 yyerrok;}
 		  ;
 
 block : LEFT_BRACKET statement_list RIGHT_BRACKET
@@ -89,7 +92,7 @@ function_call 	: BLTIN_PRINT LEFT_PARANTHESIS identifier RIGHT_PARANTHESIS//take
 				| BLTIN_RENAME LEFT_PARANTHESIS identifier COMMA identifier RIGHT_PARANTHESIS//two
 				| BLTIN_MOVE LEFT_PARANTHESIS identifier COMMA identifier RIGHT_PARANTHESIS//two
 				| BLTIN_SORT LEFT_PARANTHESIS identifier RIGHT_PARANTHESIS//one
-				| BLTIN_FILTRE_FILES LEFT_PARANTHESIS identifier RIGHT_PARANTHESIS//one
+				| BLTIN_FILTRE_FILES LEFT_PARANTHESIS identifier COMMA identifier RIGHT_PARANTHESIS//two
 				| BLTIN_BACK_UP LEFT_PARANTHESIS identifier RIGHT_PARANTHESIS//one
 				| BLTIN_SYNCHRONIZE LEFT_PARANTHESIS identifier RIGHT_PARANTHESIS//one
 				| BLTIN_SEARCH LEFT_PARANTHESIS identifier COMMA identifier RIGHT_PARANTHESIS//two
@@ -253,4 +256,3 @@ int main (void){
 	return 0;
 }
 
-void yyerror (char *s) {fprintf (stderr, "%s\n", s);}
