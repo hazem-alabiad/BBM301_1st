@@ -60,7 +60,8 @@ statement : assignment SEMICOLON
 		  | COMMENT
 		  | function_call SEMICOLON
 		  | BREAK SEMICOLON
-		  | CONTINUE SEMICOLON                     // deleted RETURN factor SEMICOLON RETURN IDNTF SEMICOLON RETURN SEMICOLON
+		  | CONTINUE SEMICOLON                     // deleted RETURN factor SEMICOLON RETURN IDNTF SEMICOLON | RETURN SEMICOLON
+		  | error
 		  ;
 
 block : LEFT_BRACKET statement_list RIGHT_BRACKET
@@ -92,7 +93,7 @@ function_call 	:  BLTIN_PRINT LEFT_PARANTHESIS identifier RIGHT_PARANTHESIS//tak
 				| BLTIN_RENAME LEFT_PARANTHESIS identifier COMMA identifier RIGHT_PARANTHESIS//two
 				| BLTIN_MOVE LEFT_PARANTHESIS identifier COMMA identifier RIGHT_PARANTHESIS//two
 				| BLTIN_SORT LEFT_PARANTHESIS identifier RIGHT_PARANTHESIS//one
-				| BLTIN_FILTRE_FILES LEFT_PARANTHESIS identifier RIGHT_PARANTHESIS//one
+				| BLTIN_FILTRE_FILES LEFT_PARANTHESIS identifier COMMA identifier RIGHT_PARANTHESIS//one
 				| BLTIN_BACK_UP LEFT_PARANTHESIS identifier RIGHT_PARANTHESIS//one
 				| BLTIN_SYNCHRONIZE LEFT_PARANTHESIS identifier RIGHT_PARANTHESIS//one
 				| BLTIN_SEARCH LEFT_PARANTHESIS identifier COMMA identifier RIGHT_PARANTHESIS//two
@@ -109,7 +110,7 @@ function_call 	:  BLTIN_PRINT LEFT_PARANTHESIS identifier RIGHT_PARANTHESIS//tak
 				 yyclearin;}       //Check wheather a function is defined or not
 		        ;
 identifier :	 IDNTF 
-				|STRING
+				|STR_LTRL
 				| error {                                   //Check wheather the parameter is acceptable or not
 			     yyerror1(" >>>> Unacceptable function parameter\n");
 				 yyerrok;
