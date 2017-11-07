@@ -265,4 +265,4 @@ int main (void){
 	return 0;
 }
 
-void yyerror1 (char *s) {fprintf (stderr, "%s", s);}
+void yyerror (char *s) {fprintf (stderr, "%s\n", s);}

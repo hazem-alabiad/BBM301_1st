@@ -13,7 +13,6 @@ IDNTF {Letter}({Digit}|{Letter})*
 NEW_LINE (\r|\n|\r\n)				
 WHITE_SPACE [ \t\v\f]+
 COMM \/\*.*?\*\/
-%option yylineno
 %%
 ({WHITE_SPACE}) ;
 ({NEW_LINE}) ;
