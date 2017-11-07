@@ -1,8 +1,11 @@
 %{
-		#include<stdio.h>
+	
+	#include<stdio.h>
 	void yyerror (char *s);
 	int yylex();
+	
 %}
+
 
 %union{  // Later to be diccussed
 	float			float_val;
@@ -20,7 +23,7 @@
 %token BLN_FALSE BLN_TRUE AND_OPT OR_OPT NOT_OPT IF ELSE SWITCH CASE DEFAULT ELIF IFNOT WHILE DO BREAK
 %token CONTINUE FOR RETURN BLTIN_PRINT BLTIN_LIST_CONTENTS BLTIN_GET_SIZE
 %token BLTIN_CREATE BLTIN_COPY BLTIN_COMPARE BLTIN_CONNECT_TO BLTIN_DELETE BLTIN_RENAME BLTIN_MOVE
-%token BLTIN_SORT BLTIN_FILTRE_FILES BLTIN_BACK_UP BLTIN_SYNCHRONIZE BLTIN_SEARCH BLTIN_CD
+%token BLTIN_SORT BLTIN_FILTRE_FILES BLTIN_BACKUP BLTIN_SYNCHRONIZE BLTIN_SEARCH BLTIN_CD BLTIN_BACK_UP
 %token BLTIN_DOWNLOAD BLTIN_UPLOAD BLTIN_OPEN BLTIN_PROPERTIES BLTIN_MOVE_BACK BLTIN_MOVE_FORWARD
 %token LESSEQ_OPT GREATEREQ_OPT NEQ_OPT EQ_OPT LESS_OPT GREATER_OPT ASSIGNMENT_OPT
 %token MULTIPLY_ASSIGNMENT_OPT DIVIDE_ASSIGNMENT_OPT MODE_ASSIGNMENT_OPT ADD_ASSIGNMENT_OPT
@@ -46,7 +49,7 @@
 %%
 program : statement_list ;
 statement_list : statement 
-               | statement_list statement
+               | statement_list statement 
 			   ;
 
 statement : assignment SEMICOLON
@@ -57,10 +60,7 @@ statement : assignment SEMICOLON
 		  | COMMENT
 		  | function_call SEMICOLON
 		  | BREAK SEMICOLON
-		  | CONTINUE SEMICOLON                   // deleted RETURN factor SEMICOLON RETURN IDNTF SEMICOLON RETURN SEMICOLON
-		  | error SEMICOLON
-		  | error  {yyclearin; /* discard lookahead */
-                 		 yyerrok;}
+		  | CONTINUE SEMICOLON                     // deleted RETURN factor SEMICOLON RETURN IDNTF SEMICOLON RETURN SEMICOLON
 		  ;
 
 block : LEFT_BRACKET statement_list RIGHT_BRACKET
@@ -81,7 +81,7 @@ RHS : arithmetic_expression
 	| boolean_expression
 	;
 
-function_call 	: BLTIN_PRINT LEFT_PARANTHESIS identifier RIGHT_PARANTHESIS//takes one parrameter
+function_call 	:  BLTIN_PRINT LEFT_PARANTHESIS identifier RIGHT_PARANTHESIS//takes one parrameter
 				| BLTIN_LIST_CONTENTS LEFT_PARANTHESIS identifier RIGHT_PARANTHESIS// takes one parameter
 				| BLTIN_GET_SIZE LEFT_PARANTHESIS identifier RIGHT_PARANTHESIS//takes one parameter
 				| BLTIN_CREATE LEFT_PARANTHESIS identifier RIGHT_PARANTHESIS//takes one parameter
@@ -92,7 +92,7 @@ function_call 	: BLTIN_PRINT LEFT_PARANTHESIS identifier RIGHT_PARANTHESIS//take
 				| BLTIN_RENAME LEFT_PARANTHESIS identifier COMMA identifier RIGHT_PARANTHESIS//two
 				| BLTIN_MOVE LEFT_PARANTHESIS identifier COMMA identifier RIGHT_PARANTHESIS//two
 				| BLTIN_SORT LEFT_PARANTHESIS identifier RIGHT_PARANTHESIS//one
-				| BLTIN_FILTRE_FILES LEFT_PARANTHESIS identifier COMMA identifier RIGHT_PARANTHESIS//two
+				| BLTIN_FILTRE_FILES LEFT_PARANTHESIS identifier RIGHT_PARANTHESIS//one
 				| BLTIN_BACK_UP LEFT_PARANTHESIS identifier RIGHT_PARANTHESIS//one
 				| BLTIN_SYNCHRONIZE LEFT_PARANTHESIS identifier RIGHT_PARANTHESIS//one
 				| BLTIN_SEARCH LEFT_PARANTHESIS identifier COMMA identifier RIGHT_PARANTHESIS//two
@@ -103,11 +103,15 @@ function_call 	: BLTIN_PRINT LEFT_PARANTHESIS identifier RIGHT_PARANTHESIS//take
 				| BLTIN_PROPERTIES LEFT_PARANTHESIS identifier RIGHT_PARANTHESIS///one
 				| BLTIN_MOVE_BACK LEFT_PARANTHESIS empty RIGHT_PARANTHESIS//zero
 				| BLTIN_MOVE_FORWARD LEFT_PARANTHESIS empty RIGHT_PARANTHESIS//zero
+				| error {                                   // for test purpose
+			     yyerror1(" >>>> Undefeined function\n");
+				 yyerrok;}       //Check wheather a function is defined or not
+		        ;
+identifier :	 IDNTF 
+				|STRING
+				| error {                                   //Check wheather the parameter is acceptable or not
+			    yyerror1(" >>>> Unacceptable function parameter\n");yyerrok;}
 				;
-
-identifier : IDNTF 
-			|STR_LTRL
-			;
 
 arithmetic_expression 	: operand
 						| arithmetic_expression ADD_OPT operand
@@ -243,6 +247,10 @@ data_type 	: CHAR
 			| SHORT_FLOAT
 			| LONG_DOUBLE
 			| SHORT_DOUBLE
+		    | error {
+				yyerror1(" >>>> unsupported data type\n");
+				yyerrok;
+			}
 			;
 
 flag : 	UNDER_SCORE UNDER_SCORE IDNTF UNDER_SCORE UNDER_SCORE
@@ -257,3 +265,4 @@ int main (void){
 	return 0;
 }
 
+void yyerror1 (char *s) {fprintf (stderr, "%s", s);}
