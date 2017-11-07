@@ -2,6 +2,7 @@
 	
 	#include<stdio.h>
 	void yyerror (char *s);
+	void yyerror1 (char *s);
 	int yylex();
 	
 %}
@@ -60,8 +61,7 @@ statement : assignment SEMICOLON
 		  | COMMENT
 		  | function_call SEMICOLON
 		  | BREAK SEMICOLON
-		  | CONTINUE SEMICOLON                     // deleted RETURN factor SEMICOLON RETURN IDNTF SEMICOLON | RETURN SEMICOLON
-		  | error
+		  | CONTINUE SEMICOLON                     // deleted RETURN factor SEMICOLON RETURN IDNTF SEMICOLON RETURN SEMICOLON
 		  ;
 
 block : LEFT_BRACKET statement_list RIGHT_BRACKET
@@ -93,7 +93,7 @@ function_call 	:  BLTIN_PRINT LEFT_PARANTHESIS identifier RIGHT_PARANTHESIS//tak
 				| BLTIN_RENAME LEFT_PARANTHESIS identifier COMMA identifier RIGHT_PARANTHESIS//two
 				| BLTIN_MOVE LEFT_PARANTHESIS identifier COMMA identifier RIGHT_PARANTHESIS//two
 				| BLTIN_SORT LEFT_PARANTHESIS identifier RIGHT_PARANTHESIS//one
-				| BLTIN_FILTRE_FILES LEFT_PARANTHESIS identifier COMMA identifier RIGHT_PARANTHESIS//one
+				| BLTIN_FILTRE_FILES LEFT_PARANTHESIS identifier RIGHT_PARANTHESIS//one
 				| BLTIN_BACK_UP LEFT_PARANTHESIS identifier RIGHT_PARANTHESIS//one
 				| BLTIN_SYNCHRONIZE LEFT_PARANTHESIS identifier RIGHT_PARANTHESIS//one
 				| BLTIN_SEARCH LEFT_PARANTHESIS identifier COMMA identifier RIGHT_PARANTHESIS//two
@@ -105,16 +105,16 @@ function_call 	:  BLTIN_PRINT LEFT_PARANTHESIS identifier RIGHT_PARANTHESIS//tak
 				| BLTIN_MOVE_BACK LEFT_PARANTHESIS empty RIGHT_PARANTHESIS//zero
 				| BLTIN_MOVE_FORWARD LEFT_PARANTHESIS empty RIGHT_PARANTHESIS//zero
 				| error {                                   // for test purpose
-			     yyerror1(" >>>> Undefeined function\n");
-				 yyerrok;
-				 yyclearin;}       //Check wheather a function is defined or not
+			    yyerror1("\t>>>> Undefined function\n");
+				YYABORT;
+                }       //Check wheather a function is defined or not
 		        ;
 identifier :	 IDNTF 
-				|STR_LTRL
+				|STRING
 				| error {                                   //Check wheather the parameter is acceptable or not
-			     yyerror1(" >>>> Unacceptable function parameter\n");
-				 yyerrok;
-				 yyclearin;}
+			    yyerror1("\t>>>> Unacceptable function parameter\n");
+				YYABORT;
+				}
 				;
 
 arithmetic_expression 	: operand
@@ -252,9 +252,8 @@ data_type 	: CHAR
 			| LONG_DOUBLE
 			| SHORT_DOUBLE
 		    | error {
-				yyerror1(" >>>> unsupported data type\n");
-				yyerrok;
-				yyclearin;
+				yyerror1("\t>>>> unsupported data type\n");
+				YYABORT;
 			}
 			;
 
@@ -266,7 +265,13 @@ empty : /* empty */
 	  ;
 %%
 int main (void){
-	yyparse();
+	int check = yyparse();
+	if(check == 0){
+		printf("\t>>>> SUCCESSFUL COMPILATION !\n");
+	}
+	else{
+		printf("\t>>>> UNSUCCESSFUL COMPILATION ! Please Fix Your Code\n");
+	}
 	return 0;
 }
 
