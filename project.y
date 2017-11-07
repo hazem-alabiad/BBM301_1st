@@ -105,12 +105,14 @@ function_call 	:  BLTIN_PRINT LEFT_PARANTHESIS identifier RIGHT_PARANTHESIS//tak
 				| BLTIN_MOVE_FORWARD LEFT_PARANTHESIS empty RIGHT_PARANTHESIS//zero
 				| error {                                   // for test purpose
 			     yyerror1(" >>>> Undefeined function\n");
-				 yyerrok;}       //Check wheather a function is defined or not
+				 yyerrok;
+				 yyclearin;}       //Check wheather a function is defined or not
 		        ;
 identifier :	 IDNTF 
 				|STRING
 				| error {                                   //Check wheather the parameter is acceptable or not
-			    yyerror1(" >>>> Unacceptable function parameter\n");yyerrok;}
+			     yyerror1(" >>>> Unacceptable function parameter\n");
+				 yyerrok;yyclearin;}
 				;
 
 arithmetic_expression 	: operand
@@ -250,6 +252,7 @@ data_type 	: CHAR
 		    | error {
 				yyerror1(" >>>> unsupported data type\n");
 				yyerrok;
+				yyclearin;
 			}
 			;
 
