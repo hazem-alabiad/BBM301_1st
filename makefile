@@ -1,13 +1,13 @@
 all: project
 
-project.tab.c project.tab.h:	project.y
-	bison -d project.y
+y.tab.c y.tab.h:	project.y
+	yacc -d project.y
 
-lex.yy.c: project.l project.tab.h
-	flex project.l
+lex.yy.c: project.l y.tab.h
+	lex project.l
 
-project: lex.yy.c project.tab.c project.tab.h
-	cc -o project project.tab.c lex.yy.c
+project: lex.yy.c y.tab.c y.tab.h
+	cc -o project y.tab.c lex.yy.c
 
 clean:
-	rm -rf project project.tab.c lex.yy.c project.tab.h || :
+	rm -rf *.o *.exe y.tab.c lex.yy.c y.tab.h project||:

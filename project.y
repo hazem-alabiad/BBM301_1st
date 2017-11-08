@@ -61,7 +61,7 @@ statement : assignment SEMICOLON
 		  | COMMENT
 		  | function_call SEMICOLON
 		  | BREAK SEMICOLON
-		  | CONTINUE SEMICOLON                     // deleted RETURN factor SEMICOLON RETURN IDNTF SEMICOLON RETURN SEMICOLON
+		  | CONTINUE SEMICOLON                     // deleted RETURN factor SEMICOLON RETURN IDNTF SEMICOLON  | RETURN SEMICOLON
 		  ;
 
 block : LEFT_BRACKET statement_list RIGHT_BRACKET
@@ -110,7 +110,7 @@ function_call 	:  BLTIN_PRINT LEFT_PARANTHESIS identifier RIGHT_PARANTHESIS//tak
                 }       //Check wheather a function is defined or not
 		        ;
 identifier :	 IDNTF 
-				|STRING
+				|STR_LTRL
 				| error {                                   //Check wheather the parameter is acceptable or not
 			    yyerror1("\t>>>> Unacceptable function parameter\n");
 				YYABORT;
