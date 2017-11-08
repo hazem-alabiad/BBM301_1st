@@ -2,13 +2,13 @@
 	
 	#include<stdio.h>
 	void yyerror (char *s);
-	void yyerror1 (char *s);
+	void yyerror1 (char *s);              // TO print more costumized error meassages
 	int yylex();
 	
 %}
 
 
-%union{  // Later to be diccussed
+%union{  
 	float			float_val;
 	int			int_val;
 	char			char_val;
@@ -61,7 +61,7 @@ statement : assignment SEMICOLON
 		  | COMMENT
 		  | function_call SEMICOLON
 		  | BREAK SEMICOLON
-		  | CONTINUE SEMICOLON                     // deleted RETURN factor SEMICOLON RETURN IDNTF SEMICOLON  | RETURN SEMICOLON
+		  | CONTINUE SEMICOLON                
 		  ;
 
 block : LEFT_BRACKET statement_list RIGHT_BRACKET
@@ -71,6 +71,10 @@ block : LEFT_BRACKET statement_list RIGHT_BRACKET
 declaration : data_type IDNTF 
 			| declaration assignment_operator RHS
 			| ARRAY data_type IDNTF LEFT_SQ_BRACKET INT_LTRL RIGHT_SQ_BRACKET ASSIGNMENT_OPT LEFT_BRACKET factor_list RIGHT_BRACKET
+			| error IDNTF {
+                yyerror1("\t>>>> Unrecognized data type !\n");
+				YYABORT;
+			}
 			;
 
 factor_list : factor
@@ -103,16 +107,21 @@ function_call 	:  BLTIN_PRINT LEFT_PARANTHESIS identifier RIGHT_PARANTHESIS//tak
 				| BLTIN_OPEN LEFT_PARANTHESIS identifier RIGHT_PARANTHESIS//one
 				| BLTIN_PROPERTIES LEFT_PARANTHESIS identifier RIGHT_PARANTHESIS///one
 				| BLTIN_MOVE_BACK LEFT_PARANTHESIS empty RIGHT_PARANTHESIS//zero
-				| BLTIN_MOVE_FORWARD LEFT_PARANTHESIS empty RIGHT_PARANTHESIS//zero
-				| error {                                   // for test purpose
-			    yyerror1("\t>>>> Undefined function\n");
-				YYABORT;
-                }       //Check wheather a function is defined or not
-		        ;
+				| BLTIN_MOVE_FORWARD LEFT_PARANTHESIS empty RIGHT_PARANTHESIS//zero    
+				| error LEFT_PARANTHESIS IDNTF RIGHT_PARANTHESIS {                                   // for test purpose
+					yyerror1("\t>>>> Undefined function!\n");
+					YYABORT;
+                }
+				| error LEFT_PARANTHESIS empty RIGHT_PARANTHESIS {                                   // for test purpose
+					yyerror1("\t>>>> Undefined function!\n");
+					YYABORT;
+				}
+				;
+
 identifier :	 IDNTF 
 				|STR_LTRL
 				| error {                                   //Check wheather the parameter is acceptable or not
-			    yyerror1("\t>>>> Unacceptable function parameter\n");
+			    yyerror1("\t>>>> Unacceptable function parameter!\n");
 				YYABORT;
 				}
 				;
@@ -167,17 +176,27 @@ loop 	: while_loop
 		| for_loop
 		;
 
-while_loop : WHILE LEFT_PARANTHESIS boolean_expression RIGHT_PARANTHESIS block 
+while_loop : WHILE PARANTHESIS block
 		   ;
 
-do_while_loop : do_statement WHILE LEFT_PARANTHESIS boolean_expression RIGHT_PARANTHESIS SEMICOLON
+do_while_loop : do_statement WHILE PARANTHESIS SEMICOLON
 			  ;
 
 do_statement : DO block
 			 ;
 
-for_loop : FOR LEFT_PARANTHESIS for_statement RIGHT_PARANTHESIS block
+for_loop : FOR PARANTHESIS block
 		 ;
+
+PARANTHESIS : LEFT_PARANTHESIS for_statement RIGHT_PARANTHESIS 
+            | LEFT_PARANTHESIS boolean_expression RIGHT_PARANTHESIS
+			| LEFT_PARANTHESIS function_call RIGHT_PARANTHESIS
+			| LEFT_PARANTHESIS IDNTF RIGHT_PARANTHESIS
+			| LEFT_PARANTHESIS error RIGHT_PARANTHESIS {
+				yyerror1("\t>>>> Expected expression before '(' !\n");
+				YYABORT;
+			}
+			;
 
 for_statement : declaration SEMICOLON boolean_expression SEMICOLON assignment // REMOVED INITILIZE, FOR ONLY WORKS WITH __ for(int x=1;....)__
 			  ;
@@ -187,12 +206,9 @@ condition 	: if_statement
 			| switch_statement
 			;
 
-if_statement 	: IF LEFT_PARANTHESIS boolean_expression RIGHT_PARANTHESIS block
-				| IF LEFT_PARANTHESIS function_call RIGHT_PARANTHESIS block
-				| IFNOT LEFT_PARANTHESIS boolean_expression RIGHT_PARANTHESIS block
-				| IFNOT LEFT_PARANTHESIS function_call RIGHT_PARANTHESIS block                       //added notif block for function call
-				| if_statement ELIF LEFT_PARANTHESIS boolean_expression RIGHT_PARANTHESIS block
-				| if_statement ELIF LEFT_PARANTHESIS function_call RIGHT_PARANTHESIS block             // added an elif block for function  call  
+if_statement 	: IF PARANTHESIS block
+				| IFNOT PARANTHESIS block
+				| if_statement ELIF PARANTHESIS block
 				| if_statement ELSE block 
 				;
 
@@ -226,7 +242,7 @@ boolean_operators 	: AND_OPT
 					| OR_OPT
 					;
 
-switch_statement : SWITCH LEFT_PARANTHESIS IDNTF RIGHT_PARANTHESIS LEFT_BRACKET case_statement RIGHT_BRACKET 
+switch_statement : SWITCH PARANTHESIS LEFT_BRACKET case_statement RIGHT_BRACKET 
 				 ;
 
 case_statement 	: CASE IDNTF COLON statement_list
@@ -251,13 +267,13 @@ data_type 	: CHAR
 			| SHORT_FLOAT
 			| LONG_DOUBLE
 			| SHORT_DOUBLE
-		    | error {
-				yyerror1("\t>>>> unsupported data type\n");
-				YYABORT;
-			}
 			;
 
 flag : 	UNDER_SCORE UNDER_SCORE IDNTF UNDER_SCORE UNDER_SCORE
+     | error {
+				yyerror1("\t>>>> Unrecognized flag of the goto function\n");
+				YYABORT;
+	 }
 	 ;
 
 
