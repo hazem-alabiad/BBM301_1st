@@ -57,12 +57,7 @@ long_int  {
 short_int {
             return (SHORT_INT);
 }					
-short_float {
-            return (SHORT_FLOAT);
-}					
-long_double	{
-            return (LONG_DOUBLE);
-}
+
  /* Boolean Literals */
 false       {
             return (BLN_FALSE);
