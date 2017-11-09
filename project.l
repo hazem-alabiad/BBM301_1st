@@ -57,12 +57,7 @@ long_int  {
 short_int {
             return (SHORT_INT);
 }					
-short_float {
-            return (SHORT_FLOAT);
-}					
-long_double	{
-            return (LONG_DOUBLE);
-}
+
  /* Boolean Literals */
 false       {
             return (BLN_FALSE);
@@ -334,4 +329,10 @@ int yywrap (void) {return 1;}
 void yyerror(char *str)
 {
     fprintf(stderr,"Error | Line: %d\n%s\n",yylineno,str);
+<<<<<<< HEAD
 }
+=======
+}
+
+   
+>>>>>>> ba4ed5c90dba33b50e636a529cbc11962e2c3cbe
