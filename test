@@ -102,3 +102,43 @@ if(e == FALSE){
 cd("D:/");
 print("hello world!!");
 
+
+directory d = "D:\new_folder";
+
+if(d){
+	create(d);
+}
+
+copy(d);
+
+String name = "Hacettepe";
+
+compare("hacettepe", name);
+
+connectTO(cloud);
+
+delete(d);
+
+delete("fileName");
+
+rename(d, "D:\programs");
+
+move(d, "C:\");
+
+sort("D:\");
+
+backup(d);
+
+synchronize("D:\Docs\Notes");
+
+search(d, "myGrades.xls");
+
+open("System32");
+
+properties("MyProjects");
+
+moveBack( ) ;
+
+moveForward();
+
+
