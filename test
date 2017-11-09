@@ -100,3 +100,6 @@ if(e == FALSE){
     print("bool expressions work!"); 	
 }
 
+cd("D:/");
+print("hello world!!");
+
