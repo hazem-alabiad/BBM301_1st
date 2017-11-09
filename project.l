@@ -335,18 +335,3 @@ void yyerror(char *str)
 {
     fprintf(stderr,"Error | Line: %d\n%s\n",yylineno,str);
 }
-
-    © 2017 GitHub, Inc.
-    Terms
-    Privacy
-    Security
-    Status
-    Help
-
-    Contact GitHub
-    API
-    Training
-    Shop
-    Blog
-    About
-
