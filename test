@@ -123,9 +123,9 @@ delete("fileName");
 
 rename(d, "D:\programs");
 
-move(d, "C:\");
+move(d, "C:/");
 
-sort("D:\");
+sort("D:/");
 
 backup(d);
 
